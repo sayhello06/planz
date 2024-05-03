@@ -138,3 +138,30 @@ function gotoDate() {
     }
     alert("invalid date");
 }
+
+//이벤트 추가 Form
+$('#eventForm').submit(function(e) {
+    e.preventDefault();
+    var title = $('#eventTitle').val();
+    var start = $('#eventStart').val();
+    var end = $('#eventEnd').val();
+    $.ajax({
+        url: '/add_event/',
+        data: {
+            'title': title,
+            'start': start,
+            'end': end,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        dataType: 'json',
+        type: 'POST',
+        success: function(response) {
+            console.log(response);
+            if (response.status == 'success') {
+                // 성공적으로 이벤트가 추가되면 FullCalendar에 새로운 이벤트를 렌더링합니다.
+                calendar.refetchEvents();
+                $('#eventModal').modal('hide');
+            }
+        }
+    });
+});

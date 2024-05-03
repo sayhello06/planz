@@ -1,5 +1,3 @@
-# urls.py
-
 from django.urls import path
 from .views import calendar, add_event, update_event, delete_event
 
