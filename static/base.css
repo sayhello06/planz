@@ -1,8 +1,49 @@
-.planz_footer {
-    font-family: 'Raleway', sans-serif;
-    font-size: 1rem;
+/* styles.css */
+
+/* FullCalendar container styling */
+#calendar {
+    width: 50%;
+    height: 50vh; /* 화면의 50% 높이 */
+    margin: 0 auto;
 }
 
-.text_output {
-    margin-top:0.5em;
+/* Modal styling */
+.modal-content {
+    border-radius: 10px;
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: white;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+/* Event form styling */
+.form-label {
+    font-weight: bold;
+}
+
+/* Buttons styling */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
 }
