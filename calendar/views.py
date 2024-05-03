@@ -1,17 +1,12 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-
-# Create your views here.
+# views.py
 
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Event
 
-
 def calendar(request):
     events = Event.objects.all()
     return render(request, 'calendar.html', {'events': events})
-
 
 def add_event(request):
     if request.method == 'POST':
@@ -23,7 +18,6 @@ def add_event(request):
     else:
         return JsonResponse({'status': 'fail'})
 
-
 def update_event(request, event_id):
     if request.method == 'POST':
         event = Event.objects.get(id=event_id)
@@ -34,7 +28,6 @@ def update_event(request, event_id):
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'fail'})
-
 
 def delete_event(request, event_id):
     if request.method == 'POST':
