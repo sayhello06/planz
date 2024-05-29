@@ -1,20 +1,14 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Event
+from calendarApp.models import Event
 
-def index(request):
-    all_events = Event.objects.all()
-    context = {
-        "events":all_events,
-    }
 
 def calendar(request):
     all_events = Event.objects.all()
     context = {
         "events": all_events,
     }
-
-    return render(request, 'calendarApp.html', context)
+    return render(request, 'calendar.html', context)
 
 
 def all_events(request):
@@ -30,6 +24,7 @@ def all_events(request):
 
     return JsonResponse(out, safe=False)
 
+
 def add_event(request):
     start = request.GET.get("start", None)
     end = request.GET.get("end", None)
@@ -38,6 +33,7 @@ def add_event(request):
     event.save()
     data = {}
     return JsonResponse(data)
+
 
 def update(request):
     start = request.GET.get("start", None)
