@@ -17,7 +17,7 @@
                center: 'title',
                right: 'month,agendaWeek,agendaDay'
            },
-           events: '/all_events',
+           events: '/calendar/all_events',
            selectable: true,
            selectHelper: true,
            editable: true,
@@ -29,12 +29,11 @@
                    var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
                    $.ajax({
                        type: "GET",
-                       url: '/add_event',
+                       url: '/calendar/add_event',
                        data: {'title': title, 'start': start, 'end': end},
                        dataType: "json",
                        success: function (data) {
                            calendar.fullCalendar('refetchEvents');
-                           alert("Added Successfully");
                        },
                        error: function (data) {
                            alert('There is a problem!!!');
@@ -49,12 +48,11 @@
                var id = event.id;
                $.ajax({
                    type: "GET",
-                   url: '/update',
+                   url: '/calendar/update',
                    data: {'title': title, 'start': start, 'end': end, 'id': id},
                    dataType: "json",
                    success: function (data) {
                        calendar.fullCalendar('refetchEvents');
-                       alert('Event Update');
                    },
                    error: function (data) {
                        alert('There is a problem!!!');
@@ -69,12 +67,11 @@
                var id = event.id;
                $.ajax({
                    type: "GET",
-                   url: '/update',
+                   url: '/calendar/update',
                    data: {'title': title, 'start': start, 'end': end, 'id': id},
                    dataType: "json",
                    success: function (data) {
                        calendar.fullCalendar('refetchEvents');
-                       alert('Event Update');
                    },
                    error: function (data) {
                        alert('There is a problem!!!');
@@ -87,7 +84,7 @@
                    var id = event.id;
                    $.ajax({
                        type: "GET",
-                       url: '/remove',
+                       url: '/calendar/remove',
                        data: {'id': id},
                        dataType: "json",
                        success: function (data) {
