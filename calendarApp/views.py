@@ -12,46 +12,39 @@ def calendar(request):
 
 
 def all_events(request):
-    all_events = Event.objects.all()
-    out = []
-    for event in all_events:
-        out.append({
-            'title': event.name,
+    events = Event.objects.all()
+    event_list = []
+    for event in events:
+        event_list.append({
             'id': event.id,
-            'start': event.start.strftime("%m/%d/%Y, %H:%M:%S"),
-            'end': event.end.strftime("%m/%d/%Y, %H:%M:%S"),
+            'title': event.title,
+            'start': event.start.strftime("%Y-%m-%d %H:%M:%S"),
+            'end': event.end.strftime("%Y-%m-%d %H:%M:%S"),
         })
-
-    return JsonResponse(out, safe=False)
-
+    return JsonResponse(event_list, safe=False)
 
 def add_event(request):
-    start = request.GET.get("start", None)
-    end = request.GET.get("end", None)
-    title = request.GET.get("title", None)
-    event = Event(name=str(title), start=start, end=end)
+    title = request.GET.get('title', None)
+    start = request.GET.get('start', None)
+    end = request.GET.get('end', None)
+    event = Event(title=title, start=start, end=end)
     event.save()
-    data = {}
-    return JsonResponse(data)
+    return JsonResponse({'success': True})
 
-
-def update(request):
-    start = request.GET.get("start", None)
-    end = request.GET.get("end", None)
-    title = request.GET.get("title", None)
-    id = request.GET.get("id", None)
+def update_event(request):
+    id = request.GET.get('id', None)
+    title = request.GET.get('title', None)
+    start = request.GET.get('start', None)
+    end = request.GET.get('end', None)
     event = Event.objects.get(id=id)
+    event.title = title
     event.start = start
     event.end = end
-    event.name = title
     event.save()
-    data = {}
-    return JsonResponse(data)
+    return JsonResponse({'success': True})
 
-
-def remove(request):
-    id = request.GET.get("id", None)
+def remove_event(request):
+    id = request.GET.get('id', None)
     event = Event.objects.get(id=id)
     event.delete()
-    data = {}
-    return JsonResponse(data)
+    return JsonResponse({'success': True})
