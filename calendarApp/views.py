@@ -18,8 +18,8 @@ def all_events(request):
         event_list.append({
             'id': event.id,
             'title': event.title,
-            'start': event.start.strftime("%Y-%m-%d %H:%M:%S"),
-            'end': event.end.strftime("%Y-%m-%d %H:%M:%S"),
+            'start': event.start.strftime("%Y-%m-%d %H:%M"),
+            'end': event.end.strftime("%Y-%m-%d %H:%M"),
         })
     return JsonResponse(event_list, safe=False)
 
