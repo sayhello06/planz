@@ -47,9 +47,11 @@ body .fc {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   /* dimensions */
-  margin: 0;
-  height: 2.1em;
-  padding: 0 .6em;
+  margin: ;
+  background: #123637;
+  height: 3em;
+  padding: 0 .7em;
+  color:
   /* text & cursor */
   font-size: 1em;
   /* normalize */
@@ -58,6 +60,7 @@ body .fc {
 
 /* Firefox has an annoying inner border */
 .fc button::-moz-focus-inner {
+
   margin: 0;
   padding: 0; }
 
@@ -79,6 +82,7 @@ body .fc {
 .fc button .fc-icon {
   /* non-theme */
   position: relative;
+  color: #ffffff;
   top: -0.05em;
   /* seems to be a good adjustment across browsers */
   margin: 0 .2em;
@@ -98,9 +102,7 @@ body .fc {
   background-repeat: repeat-x;
   border-color: #e6e6e6 #e6e6e6 #bfbfbf;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  color: #333;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); }
+  color: #333; }
 
 .fc-state-hover,
 .fc-state-down,
@@ -142,11 +144,13 @@ previous button's border...
 .fc .fc-button-group > * {
   /* extra precedence b/c buttons have margin set to zero */
   float: left;
-  margin: 0 0 0 -1px; }
+  margin: 0 0 0 0px;
+  color: #ffffff;}
 
 .fc .fc-button-group > :first-child {
   /* same */
-  margin-left: 0; }
+  margin-left: 0;
+  color: #ffffff;}
 
 /* Popover
 --------------------------------------------------------------------------------------------------*/
@@ -219,13 +223,20 @@ hr.fc-divider {
   /* normalize cross-browser */ }
 
 .fc th {
+  border-top: none;
+  border-left: solid;
+  border-right: solid;
+  border-bottom: solid;
+  border-width: 1px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  vertical-align: center;
   text-align: center; }
 
-.fc th,
 .fc td {
   border-style: solid;
   border-width: 1px;
-  padding: 0;
+  padding: px;
   vertical-align: top; }
 
 .fc td.fc-today {
@@ -621,7 +632,7 @@ TODO: more distinction between this file and common.css
   color: #666; }
 
 .fc-unthemed td.fc-today {
-  background: #fcf8e3; }
+  background: #eeeeee; }
 
 .fc-unthemed .fc-disabled-day {
   background: #d7d7d7;
@@ -848,6 +859,7 @@ NOTE: use percentage font sizes or else old IE chokes
 
 .fc-toolbar .fc-state-active,
 .fc-toolbar .ui-state-active {
+  background: #0a2c2d;
   z-index: 4; }
 
 .fc-toolbar button:focus {
@@ -863,6 +875,7 @@ NOTE: use percentage font sizes or else old IE chokes
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box; }
+
 
 .fc-view,
 .fc-view > table {
