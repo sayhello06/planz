@@ -1,0 +1,143 @@
+<!-- accountbookApp/templates/accountbookApp/calendar.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Account Book</title>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js'></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: '/account_book/events/',
+                dateClick: function(info) {
+                    $('#transactionDate').val(info.dateStr);
+                    $('#addTransactionModal').modal('show');
+                },
+                eventClick: function(info) {
+                    var transactionId = info.event.id;
+                    $.get(`/account_book/edit/${transactionId}/`, function(data) {
+                        $('#editTransactionModal .modal-body').html(data);
+                        $('#editTransactionModal').modal('show');
+                    });
+                }
+            });
+            calendar.render();
+
+            $('#incomeForm').submit(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#addTransactionModal').modal('hide');
+                        calendar.refetchEvents();
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
+            });
+
+            $('#expenseForm').submit(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#addTransactionModal').modal('hide');
+                        calendar.refetchEvents();
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id='calendar'></div>
+
+    <!-- Add Transaction Modal -->
+    <div class="modal fade" id="addTransactionModal" tabindex="-1" role="dialog" aria-labelledby="addTransactionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTransactionModalLabel">Add Transaction</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#incomeTab" role="tab">Income</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#expenseTab" role="tab">Expense</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="incomeTab" role="tabpanel">
+                            <form id="incomeForm" action="/account_book/add/" method="post">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <input type="hidden" name="transaction_type" value="income">
+                                <input type="hidden" id="transactionDate" name="date">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="expenseTab" role="tabpanel">
+                            <form id="expenseForm" action="/account_book/add/" method="post">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <input type="hidden" name="transaction_type" value="expense">
+                                <input type="hidden" id="transactionDate" name="date">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Transaction Modal -->
+    <div class="modal fade" id="editTransactionModal" tabindex="-1" role="dialog" aria-labelledby="editTransactionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTransactionModalLabel">Edit Transaction</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Content will be loaded here by AJAX -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
