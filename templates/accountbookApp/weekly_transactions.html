@@ -1,0 +1,10 @@
+<div class="container">
+    <h2>Weekly Transactions</h2>
+    <ul class="list-group">
+        {% for transaction in transactions %}
+            <li class="list-group-item">
+                <strong>{{ transaction.date }}</strong>: {{ transaction.description }} - {{ transaction.amount }}₩ ({{ transaction.transaction_type }})
+            </li>
+        {% endfor %}
+    </ul>
+</div>

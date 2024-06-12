@@ -8,11 +8,34 @@
 <body>
     <div class="container">
         <h2>Add Transaction</h2>
-        <form method="post">
+        <form id="addTransactionForm" action="/account_book/add/" method="post">
             {% csrf_token %}
             {{ form.as_p }}
+            <input type="hidden" name="date" id="addTransactionDate">
             <button type="submit" class="btn btn-primary">Add</button>
         </form>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#addTransactionForm').submit(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        alert('Transaction added successfully');
+                        // Handle success (e.g., redirect or update the calendar)
+                    },
+                    error: function(response) {
+                        alert('Failed to add transaction');
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

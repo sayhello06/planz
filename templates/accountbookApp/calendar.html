@@ -1,4 +1,3 @@
-<!-- accountbookApp/templates/accountbookApp/calendar.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +16,8 @@
                 initialView: 'dayGridMonth',
                 events: '/account_book/events/',
                 dateClick: function(info) {
-                    $('#transactionDate').val(info.dateStr);
+                    $('#incomeTransactionDate').val(info.dateStr);
+                    $('#expenseTransactionDate').val(info.dateStr);
                     $('#addTransactionModal').modal('show');
                 },
                 eventClick: function(info) {
@@ -30,6 +30,34 @@
             });
             calendar.render();
 
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            const csrftoken = getCookie('csrftoken');
+
+            function csrfSafeMethod(method) {
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
             $('#incomeForm').submit(function(event) {
                 event.preventDefault();
                 $.ajax({
@@ -37,10 +65,16 @@
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
                     success: function(response) {
-                        $('#addTransactionModal').modal('hide');
-                        calendar.refetchEvents();
+                        if (response.success) {
+                            $('#addTransactionModal').modal('hide');
+                            calendar.refetchEvents();
+                        } else {
+                            alert('Failed to save transaction');
+                            console.log(response.errors);
+                        }
                     },
                     error: function(response) {
+                        alert('Failed to save transaction');
                         console.log(response);
                     }
                 });
@@ -53,10 +87,16 @@
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
                     success: function(response) {
-                        $('#addTransactionModal').modal('hide');
-                        calendar.refetchEvents();
+                        if (response.success) {
+                            $('#addTransactionModal').modal('hide');
+                            calendar.refetchEvents();
+                        } else {
+                            alert('Failed to save transaction');
+                            console.log(response.errors);
+                        }
                     },
                     error: function(response) {
+                        alert('Failed to save transaction');
                         console.log(response);
                     }
                 });
@@ -65,7 +105,37 @@
     </script>
 </head>
 <body>
-    <div id='calendar'></div>
+    <div class="container">
+        <h1>Account Book</h1>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#calendarTab" data-toggle="tab">Calendar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#dailyTab" data-toggle="tab">Daily</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#weeklyTab" data-toggle="tab">Weekly</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#monthlyTab" data-toggle="tab">Monthly</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="calendarTab">
+                <div id='calendar'></div>
+            </div>
+            <div class="tab-pane" id="dailyTab">
+                {% include 'accountbookApp/daily_transactions.html' %}
+            </div>
+            <div class="tab-pane" id="weeklyTab">
+                {% include 'accountbookApp/weekly_transactions.html' %}
+            </div>
+            <div class="tab-pane" id="monthlyTab">
+                {% include 'accountbookApp/monthly_transactions.html' %}
+            </div>
+        </div>
+    </div>
 
     <!-- Add Transaction Modal -->
     <div class="modal fade" id="addTransactionModal" tabindex="-1" role="dialog" aria-labelledby="addTransactionModalLabel" aria-hidden="true">
@@ -95,7 +165,7 @@
                                 {% csrf_token %}
                                 {{ form.as_p }}
                                 <input type="hidden" name="transaction_type" value="income">
-                                <input type="hidden" id="transactionDate" name="date">
+                                <input type="hidden" id="incomeTransactionDate" name="date">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary">Save changes</button>
@@ -107,7 +177,7 @@
                                 {% csrf_token %}
                                 {{ form.as_p }}
                                 <input type="hidden" name="transaction_type" value="expense">
-                                <input type="hidden" id="transactionDate" name="date">
+                                <input type="hidden" id="expenseTransactionDate" name="date">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary">Save changes</button>
