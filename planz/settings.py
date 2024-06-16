@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap4',
     'calendarApp',
-    'accountbookApp',
+    'finance',
     'django_extensions',
 ]
 
