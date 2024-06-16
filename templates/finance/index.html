@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance App</title>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/daygrid/main.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div id='calendar'></div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="transactionModal" tabindex="-1" role="dialog" aria-labelledby="transactionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transactionModalLabel">Add Transaction</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="income-tab" data-toggle="tab" href="#income" role="tab" aria-controls="income" aria-selected="true">Income</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="expense-tab" data-toggle="tab" href="#expense" role="tab" aria-controls="expense" aria-selected="false">Expense</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="income" role="tabpanel" aria-labelledby="income-tab">
+                            <form id="incomeForm">
+                                <div class="form-group">
+                                    <label for="incomeAmount">Amount</label>
+                                    <input type="number" class="form-control" id="incomeAmount" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="incomeDescription">Description</label>
+                                    <textarea class="form-control" id="incomeDescription" rows="3" required></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="expense" role="tabpanel" aria-labelledby="expense-tab">
+                            <form id="expenseForm">
+                                <div class="form-group">
+                                    <label for="expenseAmount">Amount</label>
+                                    <input type="number" class="form-control" id="expenseAmount" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="expenseDescription">Description</label>
+                                    <textarea class="form-control" id="expenseDescription" rows="3" required></textarea>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveTransaction">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/daygrid/main.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                dateClick: function(info) {
+                    $('#transactionModal').modal('show');
+                    $('#saveTransaction').off('click').on('click', function() {
+                        var transactionType = $('#myTab .active').attr('id').split('-')[0];
+                        var amount = transactionType === 'income' ? $('#incomeAmount').val() : $('#expenseAmount').val();
+                        var description = transactionType === 'income' ? $('#incomeDescription').val() : $('#expenseDescription').val();
+                        var date = info.dateStr;
+
+                        $.ajax({
+                            url: '{% url "add_transaction" %}',
+                            type: 'POST',
+                            data: JSON.stringify({
+                                date: date,
+                                transaction_type: transactionType,
+                                amount: amount,
+                                description: description
+                            }),
+                            contentType: 'application/json',
+                            success: function(response) {
+                                if (response.status === 'success') {
+                                    $('#transactionModal').modal('hide');
+                                    calendar.refetchEvents();
+                                    $('#incomeForm')[0].reset();
+                                    $('#expenseForm')[0].reset();
+                                } else {
+                                    alert('Failed to save the transaction.');
+                                }
+                            },
+                            error: function() {
+                                alert('Failed to save the transaction.');
+                            }
+                        });
+                    });
+                }
+            });
+            calendar.render();
+
+            $('#transactionModal').on('hidden.bs.modal', function () {
+                $('#incomeForm')[0].reset();
+                $('#expenseForm')[0].reset();
+            });
+        });
+    </script>
+</body>
+</html>
