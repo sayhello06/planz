@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "calendarApp/base.html" %}
 
 {% block content %}
     <!-- Add Event Modal -->
@@ -45,6 +45,51 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Event Modal -->
+    <div id="editEventModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Edit Event</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="editEventForm">
+                        <div class="form-group">
+                            <label for="editEventTitle">Event Title</label>
+                            <input type="text" class="form-control" id="editEventTitle" placeholder="Event Title">
+                        </div>
+                        <div class="form-group">
+                            <label for="editStartTime">Start Time</label>
+                            <div class='input-group date' id='editStartTime'>
+                                <input type='text' class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEndTime">End Time</label>
+                            <div class='input-group date' id='editEndTime'>
+                                <input type='text' class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="updateEvent">Update</button>
+                    <button type="button" class="btn btn-danger" id="deleteEvent">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scrpits %}
@@ -55,6 +100,12 @@
                 format: 'YYYY-MM-DD HH:mm'
             });
             $('#endTime').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm'
+            });
+            $('#editStartTime').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm'
+            });
+            $('#editEndTime').datetimepicker({
                 format: 'YYYY-MM-DD HH:mm'
             });
 
@@ -148,22 +199,54 @@
                     });
                 },
                 eventClick: function (event) {
-                    if (confirm("Are you sure you want to remove it?")) {
-                        var id = event.id;
+                    $('#editEventModal').modal('show');
+                    $('#editEventTitle').val(event.title);
+                    $('#editStartTime').data("DateTimePicker").date(event.start);
+                    $('#editEndTime').data("DateTimePicker").date(event.end);
+
+                    $('#updateEvent').off('click').on('click', function () {
+                        var title = $('#editEventTitle').val();
+                        var start = $('#editStartTime').data("DateTimePicker").date().format('YYYY-MM-DD HH:mm');
+                        var end = $('#editEndTime').data("DateTimePicker").date().format('YYYY-MM-DD HH:mm');
+
+                        if (title) {
+                            $.ajax({
+                                type: "GET",
+                                url: '/calendar/update_event',
+                                data: {
+                                    'title': title,
+                                    'start': start,
+                                    'end': end,
+                                    'id': event.id
+                                },
+                                dataType: "json",
+                                success: function () {
+                                    calendar.fullCalendar('refetchEvents');
+                                    $('#editEventModal').modal('hide');
+                                },
+                                error: function () {
+                                    alert('There is a problem!!!');
+                                }
+                            });
+                        }
+                    });
+
+                    $('#deleteEvent').off('click').on('click', function () {
                         $.ajax({
                             type: "GET",
                             url: '/calendar/remove_event',
-                            data: {'id': id},
+                            data: {'id': event.id},
                             dataType: "json",
                             success: function () {
                                 calendar.fullCalendar('refetchEvents');
-                                alert('Event Removed');
+                                $('#editEventModal').modal('hide');
                             },
                             error: function () {
                                 alert('There is a problem!!!');
                             }
                         });
-                    }
+                        
+                    });
                 },
             });
         });

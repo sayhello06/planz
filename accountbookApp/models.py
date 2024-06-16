@@ -6,7 +6,7 @@ class Transaction(models.Model):
         ('expense', 'Expense'),
     )
     date = models.DateField()
-    type = models.CharField(max_length=10, choices=TRANSACTION_TYPES, default='income')
+    type = models.CharField(max_length=10, choices=TRANSACTION_TYPES)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.CharField(max_length=255, null=True)
 

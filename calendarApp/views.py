@@ -8,7 +8,7 @@ def calendar(request):
     context = {
         "events": all_events,
     }
-    return render(request, 'calendar.html', context)
+    return render(request, 'calendarApp/calendar.html', context)
 
 
 def all_events(request):
