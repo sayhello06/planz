@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from calendarApp.models import Event
+from django.views import View
 
+from calendarApp.models import Event
 
 def calendar(request):
     all_events = Event.objects.all()
