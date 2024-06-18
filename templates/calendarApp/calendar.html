@@ -3,87 +3,79 @@
 {% block content %}
     <!-- Add Event Modal -->
 <div id="calendar"></div>
-    <div id="addEventModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title">Add Event</h4>
+                    <h5 class="modal-title" id="addEventModalLabel">Add Event</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="eventForm">
-                        <div class="form-group">
-                            <label for="eventTitle">Event Title</label>
-                            <input type="text" class="form-control" id="eventTitle" placeholder="Event Title">
-                        </div>
-                        <div class="form-group">
-                            <label for="startTime">Start Time</label>
-                            <div class='input-group date' id='startTime'>
-                                <input type='text' class="form-control" />
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
+                    <div class="mb-3">
+                        <label for="eventTitle" class="form-label">Event Title</label>
+                        <input type="text" class="form-control" id="eventTitle">
+                    </div>
+                    <div class="mb-3">
+                        <label for="startTime" class="form-label">Start Time</label>
+                        <div class="input-group date" id="startTime" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#startTime"/>
+                            <div class="input-group-append" data-target="#startTime" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="endTime">End Time</label>
-                            <div class='input-group date' id='endTime'>
-                                <input type='text' class="form-control" />
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="endTime" class="form-label">End Time</label>
+                        <div class="input-group date" id="endTime" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#endTime"/>
+                            <div class="input-group-append" data-target="#endTime" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="saveEvent">Save</button>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <!-- Edit Event Modal -->
-    <div id="editEventModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title">Edit Event</h4>
+                    <h5 class="modal-title" id="editEventModalLabel">Edit Event</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editEventForm">
-                        <div class="form-group">
-                            <label for="editEventTitle">Event Title</label>
-                            <input type="text" class="form-control" id="editEventTitle" placeholder="Event Title">
-                        </div>
-                        <div class="form-group">
-                            <label for="editStartTime">Start Time</label>
-                            <div class='input-group date' id='editStartTime'>
-                                <input type='text' class="form-control" />
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
+                    <div class="mb-3">
+                        <label for="editEventTitle" class="form-label">Event Title</label>
+                        <input type="text" class="form-control" id="editEventTitle">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editStartTime" class="form-label">Start Time</label>
+                        <div class="input-group date" id="editStartTime" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#editStartTime"/>
+                            <div class="input-group-append" data-target="#editStartTime" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="editEndTime">End Time</label>
-                            <div class='input-group date' id='editEndTime'>
-                                <input type='text' class="form-control" />
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEndTime" class="form-label">End Time</label>
+                        <div class="input-group date" id="editEndTime" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#editEndTime"/>
+                            <div class="input-group-append" data-target="#editEndTime" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="updateEvent">Update</button>
                     <button type="button" class="btn btn-danger" id="deleteEvent">Delete</button>
                 </div>
@@ -93,162 +85,161 @@
 {% endblock %}
 
 {% block scrpits %}
-    <script>
-        $(document).ready(function () {
-            // Initialize datetimepickers
-            $('#startTime').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm'
-            });
-            $('#endTime').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm'
-            });
-            $('#editStartTime').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm'
-            });
-            $('#editEndTime').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm'
-            });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
 
-            var calendar = $('#calendar').fullCalendar({
-                header: {
-                    left: 'month,agendaWeek,agendaDay',
-                    center: 'title',
-                    right: 'prev, next'
-                    //month,agendaWeek,agendaDay,today,
-                },
-                events: '/calendar/all_events',
-                selectable: true,
-                selectHelper: true,
-                editable: true,
-                eventLimit: true,
-                select: function (start, end) {
-                    $('#addEventModal').modal('show');
-                    $('#startTime').data("DateTimePicker").date(start);
-                    $('#endTime').data("DateTimePicker").date(end);
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            events: '/calendar/all_events',
+            selectable: true,
+            editable: true,
+            select: function (info) {
+                $('#addEventModal').modal('show');
+                $('#startTime').datetimepicker('date', info.start);
+                $('#endTime').datetimepicker('date', info.end);
 
-                    $('#saveEvent').off('click').on('click', function () {
-                        var title = $('#eventTitle').val();
-                        var start = $('#startTime').data("DateTimePicker").date().format('YYYY-MM-DD HH:mm');
-                        var end = $('#endTime').data("DateTimePicker").date().format('YYYY-MM-DD HH:mm');
+                $('#saveEvent').off('click').on('click', function () {
+                    var title = $('#eventTitle').val();
+                    var start = $('#startTime').datetimepicker('viewDate').format('YYYY-MM-DD HH:mm');
+                    var end = $('#endTime').datetimepicker('viewDate').format('YYYY-MM-DD HH:mm');
 
-                        if (title) {
-                            $.ajax({
-                                type: "GET",
-                                url: '/calendar/add_event',
-                                data: {
-                                    'title': title,
-                                    'start': start,
-                                    'end': end
-                                },
-                                dataType: "json",
-                                success: function () {
-                                    calendar.fullCalendar('refetchEvents');
-                                    $('#addEventModal').modal('hide');
-                                },
-                                error: function () {
-                                    alert('There is a problem!!!');
-                                }
-                            });
-                        }
-                    });
-                },
-                eventResize: function (event) {
-                    var start = moment(event.start).format('YYYY-MM-DD HH:mm');
-                    var end = moment(event.end).format('YYYY-MM-DD HH:mm');
-                    var title = event.title;
-                    var id = event.id;
-                    $.ajax({
-                        type: "GET",
-                        url: '/calendar/update',
-                        data: {
-                            'title': title,
-                            'start': start,
-                            'end': end,
-                            'id': id
-                        },
-                        dataType: "json",
-                        success: function () {
-                            calendar.fullCalendar('refetchEvents');
-                        },
-                        error: function () {
-                            alert('There is a problem!!!');
-                        }
-                    });
-                },
-                eventDrop: function (event) {
-                    var start = moment(event.start).format('YYYY-MM-DD HH:mm');
-                    var end = moment(event.end).format('YYYY-MM-DD HH:mm');
-                    var title = event.title;
-                    var id = event.id;
-                    $.ajax({
-                        type: "GET",
-                        url: '/calendar/update_event',
-                        data: {
-                            'title': title,
-                            'start': start,
-                            'end': end,
-                            'id': id
-                        },
-                        dataType: "json",
-                        success: function () {
-                            calendar.fullCalendar('refetchEvents');
-                        },
-                        error: function () {
-                            alert('There is a problem!!!');
-                        }
-                    });
-                },
-                eventClick: function (event) {
-                    $('#editEventModal').modal('show');
-                    $('#editEventTitle').val(event.title);
-                    $('#editStartTime').data("DateTimePicker").date(event.start);
-                    $('#editEndTime').data("DateTimePicker").date(event.end);
-
-                    $('#updateEvent').off('click').on('click', function () {
-                        var title = $('#editEventTitle').val();
-                        var start = $('#editStartTime').data("DateTimePicker").date().format('YYYY-MM-DD HH:mm');
-                        var end = $('#editEndTime').data("DateTimePicker").date().format('YYYY-MM-DD HH:mm');
-
-                        if (title) {
-                            $.ajax({
-                                type: "GET",
-                                url: '/calendar/update_event',
-                                data: {
-                                    'title': title,
-                                    'start': start,
-                                    'end': end,
-                                    'id': event.id
-                                },
-                                dataType: "json",
-                                success: function () {
-                                    calendar.fullCalendar('refetchEvents');
-                                    $('#editEventModal').modal('hide');
-                                },
-                                error: function () {
-                                    alert('There is a problem!!!');
-                                }
-                            });
-                        }
-                    });
-
-                    $('#deleteEvent').off('click').on('click', function () {
+                    if (title) {
                         $.ajax({
                             type: "GET",
-                            url: '/calendar/remove_event',
-                            data: {'id': event.id},
+                            url: '/calendar/add_event',
+                            data: {
+                                'title': title,
+                                'start': start,
+                                'end': end
+                            },
                             dataType: "json",
                             success: function () {
-                                calendar.fullCalendar('refetchEvents');
+                                calendar.refetchEvents();
+                                $('#addEventModal').modal('hide');
+                            },
+                            error: function () {
+                                alert('There is a problem!!!');
+                            }
+                        });
+                    }
+                });
+            },
+            eventResize: function (info) {
+                var start = moment(info.event.start).format('YYYY-MM-DD HH:mm');
+                var end = moment(info.event.end).format('YYYY-MM-DD HH:mm');
+                var title = info.event.title;
+                var id = info.event.id;
+                $.ajax({
+                    type: "GET",
+                    url: '/calendar/update',
+                    data: {
+                        'title': title,
+                        'start': start,
+                        'end': end,
+                        'id': id
+                    },
+                    dataType: "json",
+                    success: function () {
+                        calendar.refetchEvents();
+                    },
+                    error: function () {
+                        alert('There is a problem!!!');
+                    }
+                });
+            },
+            eventDrop: function (info) {
+                var start = moment(info.event.start).format('YYYY-MM-DD HH:mm');
+                var end = moment(info.event.end).format('YYYY-MM-DD HH:mm');
+                var title = info.event.title;
+                var id = info.event.id;
+                $.ajax({
+                    type: "GET",
+                    url: '/calendar/update_event',
+                    data: {
+                        'title': title,
+                        'start': start,
+                        'end': end,
+                        'id': id
+                    },
+                    dataType: "json",
+                    success: function () {
+                        calendar.refetchEvents();
+                    },
+                    error: function () {
+                        alert('There is a problem!!!');
+                    }
+                });
+            },
+            eventClick: function (info) {
+                $('#editEventModal').modal('show');
+                $('#editEventTitle').val(info.event.title);
+                $('#editStartTime').datetimepicker('date', info.event.start);
+                $('#editEndTime').datetimepicker('date', info.event.end);
+
+                $('#updateEvent').off('click').on('click', function () {
+                    var title = $('#editEventTitle').val();
+                    var start = $('#editStartTime').datetimepicker('viewDate').format('YYYY-MM-DD HH:mm');
+                    var end = $('#editEndTime').datetimepicker('viewDate').format('YYYY-MM-DD HH:mm');
+
+                    if (title) {
+                        $.ajax({
+                            type: "GET",
+                            url: '/calendar/update_event',
+                            data: {
+                                'title': title,
+                                'start': start,
+                                'end': end,
+                                'id': info.event.id
+                            },
+                            dataType: "json",
+                            success: function () {
+                                calendar.refetchEvents();
                                 $('#editEventModal').modal('hide');
                             },
                             error: function () {
                                 alert('There is a problem!!!');
                             }
                         });
-                        
+                    }
+                });
+
+                $('#deleteEvent').off('click').on('click', function () {
+                    $.ajax({
+                        type: "GET",
+                        url: '/calendar/remove_event',
+                        data: {'id': info.event.id},
+                        dataType: "json",
+                        success: function () {
+                            calendar.refetchEvents();
+                            $('#editEventModal').modal('hide');
+                        },
+                        error: function () {
+                            alert('There is a problem!!!');
+                        }
                     });
-                },
-            });
+                });
+            },
         });
-    </script>
+
+        calendar.render();
+
+        $('#startTime').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm'
+        });
+        $('#endTime').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm'
+        });
+        $('#editStartTime').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm'
+        });
+        $('#editEndTime').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm'
+        });
+    });
+</script>
 {% endblock %}
