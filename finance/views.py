@@ -6,7 +6,7 @@ from django.http import JsonResponse
 import json
 
 def index(request):
-    return render(request, 'finance/index.html')
+    return render(request, 'finance/accountbook.html')
 
 @csrf_exempt
 def add_transaction(request):
