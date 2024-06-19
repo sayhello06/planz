@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const menuOpen = document.getElementById('menu-open');
     const menuClose = document.getElementById('menu-close');
-    const sideBar = document.querySelector('.container .left-section');
-    const sidebarItems = document.querySelectorAll('.container .left-section .sidebar .item');
+    const sideBar = document.querySelector('.left-section');
+    const sidebarItems = document.querySelectorAll('.left-section .sidebar .item');
 
     if (menuOpen) {
         menuOpen.addEventListener('click', () => {

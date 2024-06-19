@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'calendarApp',
     'finance',
+    'todoListApp',
     'django_extensions',
 ]
 
