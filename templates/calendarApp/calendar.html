@@ -2,7 +2,7 @@
 
 {% block content %}
     <!-- Add Event Modal -->
-<div id="calendar"></div>
+    <div id="calendar"></div>
     <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -17,20 +17,20 @@
                     </div>
                     <div class="mb-3">
                         <label for="startTime" class="form-label">Start Time</label>
-                        <div class="input-group date" id="startTime" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#startTime"/>
-                            <div class="input-group-append" data-target="#startTime" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
+                        <div class="input-group date" id="startTime" data-td-target-input="nearest">
+                            <input type="text" class="form-control" data-td-target="#startTime"/>
+                            <span class="input-group-text" data-td-target="#startTime" data-td-toggle="datetimepicker">
+                                <i class="fa fa-calendar"></i>
+                            </span>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="endTime" class="form-label">End Time</label>
-                        <div class="input-group date" id="endTime" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#endTime"/>
-                            <div class="input-group-append" data-target="#endTime" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
+                        <div class="input-group date" id="endTime" data-td-target-input="nearest">
+                            <input type="text" class="form-control" data-td-target="#endTime"/>
+                            <span class="input-group-text" data-td-target="#endTime" data-td-toggle="datetimepicker">
+                                <i class="fa fa-calendar"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -57,20 +57,20 @@
                     </div>
                     <div class="mb-3">
                         <label for="editStartTime" class="form-label">Start Time</label>
-                        <div class="input-group date" id="editStartTime" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#editStartTime"/>
-                            <div class="input-group-append" data-target="#editStartTime" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
+                        <div class="input-group date" id="editStartTime" data-td-target-input="nearest">
+                            <input type="text" class="form-control" data-td-target="#editStartTime"/>
+                            <span class="input-group-text" data-td-target="#editStartTime" data-td-toggle="datetimepicker">
+                                <i class="fa fa-calendar"></i>
+                            </span>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="editEndTime" class="form-label">End Time</label>
-                        <div class="input-group date" id="editEndTime" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#editEndTime"/>
-                            <div class="input-group-append" data-target="#editEndTime" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
+                        <div class="input-group date" id="editEndTime" data-td-target-input="nearest">
+                            <input type="text" class="form-control" data-td-target="#editEndTime"/>
+                            <span class="input-group-text" data-td-target="#editEndTime" data-td-toggle="datetimepicker">
+                                <i class="fa fa-calendar"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -84,12 +84,13 @@
     </div>
 {% endblock %}
 
-{% block scrpits %}
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/6.7.10/js/tempus-dominus.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
@@ -97,16 +98,47 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             events: '/calendar/all_events',
             selectable: true,
-            editable: true, 
+            editable: true,
             select: function (info) {
                 $('#addEventModal').modal('show');
-                $('#startTime').datetimepicker('date', info.start);
-                $('#endTime').datetimepicker('date', info.end);
+
+                var startDateTimePicker = new tempusDominus.TempusDominus(document.getElementById('startTime'), {
+                    defaultDate: info.start,
+                    display: {
+                        components: {
+                            calendar: true,
+                            date: true,
+                            month: true,
+                            year: true,
+                            decades: true,
+                            clock: true,
+                            hours: true,
+                            minutes: true,
+                            seconds: false
+                        }
+                    }
+                });
+                var endDateTimePicker = new tempusDominus.TempusDominus(document.getElementById('endTime'), {
+                    defaultDate: info.end,
+                    display: {
+                        components: {
+                            calendar: true,
+                            date: true,
+                            month: true,
+                            year: true,
+                            decades: true,
+                            clock: true,
+                            hours: true,
+                            minutes: true,
+                            seconds: false
+                        }
+                    }
+                });
 
                 $('#saveEvent').off('click').on('click', function () {
                     var title = $('#eventTitle').val();
-                    var start = $('#startTime').datetimepicker('viewDate').format('YYYY-MM-DD HH:mm');
-                    var end = $('#endTime').datetimepicker('viewDate').format('YYYY-MM-DD HH:mm');
+                    var start = moment(startDateTimePicker.dates.getValue()).format('YYYY-MM-DD HH:mm');
+                    var end = moment(endDateTimePicker.dates.getValue()).format('YYYY-MM-DD HH:mm');
 
                     if (title) {
                         $.ajax({
@@ -178,13 +210,44 @@
             eventClick: function (info) {
                 $('#editEventModal').modal('show');
                 $('#editEventTitle').val(info.event.title);
-                $('#editStartTime').datetimepicker('date', info.event.start);
-                $('#editEndTime').datetimepicker('date', info.event.end);
+
+                var editStartDateTimePicker = new tempusDominus.TempusDominus(document.getElementById('editStartTime'), {
+                    display: {
+                        components: {
+                            calendar: true,
+                            date: true,
+                            month: true,
+                            year: true,
+                            decades: true,
+                            clock: true,
+                            hours: true,
+                            minutes: true,
+                            seconds: false
+                        }
+                    }
+                });
+                var editEndDateTimePicker = new tempusDominus.TempusDominus(document.getElementById('editEndTime'), {
+                    display: {
+                        components: {
+                            calendar: true,
+                            date: true,
+                            month: true,
+                            year: true,
+                            decades: true,
+                            clock: true,
+                            hours: true,
+                            minutes: true,
+                            seconds: false
+                        }
+                    }
+                });
+                editStartDateTimePicker.dates.setValue(info.event.start);
+                editEndDateTimePicker.dates.setValue(info.event.end);
 
                 $('#updateEvent').off('click').on('click', function () {
                     var title = $('#editEventTitle').val();
-                    var start = $('#editStartTime').datetimepicker('viewDate').format('YYYY-MM-DD HH:mm');
-                    var end = $('#editEndTime').datetimepicker('viewDate').format('YYYY-MM-DD HH:mm');
+                    var start = moment(editStartDateTimePicker.dates.getValue()).format('YYYY-MM-DD HH:mm');
+                    var end = moment(editEndDateTimePicker.dates.getValue()).format('YYYY-MM-DD HH:mm');
 
                     if (title) {
                         $.ajax({
@@ -227,19 +290,6 @@
         });
 
         calendar.render();
-
-        $('#startTime').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm'
-        });
-        $('#endTime').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm'
-        });
-        $('#editStartTime').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm'
-        });
-        $('#editEndTime').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm'
-        });
     });
 </script>
 {% endblock %}
