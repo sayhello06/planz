@@ -26,5 +26,6 @@ urlpatterns = [
     path('calendar/', include('calendarApp.urls')),
     path('', DashboardView.as_view(), name='dashboard'),
     path('accountbook/', include('finance.urls')),
+    path('todoList/', include('todoListApp.urls')),
 ]
 

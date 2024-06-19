@@ -16,39 +16,34 @@ i{
     font-size: 24px;
 }
 
-.container{
+body{
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 250px 1fr;
     height: 100vh;
 }
 
-.container_main{
-    display: grid;
-    grid-template-columns: 300px 1fr 400px;
-    height: 100vh;
-}
-
-.container .left-section{
+  .left-section{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
     padding: 40px 0;
 }
 
-.container .left-section .logo{
+  .left-section .logo{
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 60px;
 }
 
-.container .left-section .logo img{
+  .left-section .logo img{
     width: 40px;
     height: 40px;
+    margin-left: -20px;
     object-fit: cover;
 }
 
-.container .left-section .logo a{
+  .left-section .logo a{
     font-weight: 800;
     font-size: 20px;
     color: #006ED3;
@@ -71,24 +66,24 @@ i{
     color: #208BEE;
 }
 
-.container .left-section .sidebar{
+  .left-section .sidebar{
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.container .left-section .sidebar .item{
+  .left-section .sidebar .item{
     display: flex;
     gap: 20px;
     cursor: pointer;
 }
 
-.container .left-section .sidebar i{
+  .left-section .sidebar i{
     color: #BDBDBD;
     transition: all 0.3s ease;
 }
 
-.container .left-section .sidebar a{
+  .left-section .sidebar a{
     display: flex;
     align-items: center;
     gap: 30px;
@@ -98,13 +93,13 @@ i{
     transition: all 0.3s ease;
 }
 
-.container .left-section .sidebar .item#active a,
-.container .left-section .sidebar .item#active i,
-.container .left-section .upgrade .link i{
+  .left-section .sidebar .item#active a,
+  .left-section .sidebar .item#active i,
+  .left-section .upgrade .link i{
     color: #369FFF;
 }
 
-.container .left-section .sidebar .item a::after{
+  .left-section .sidebar .item a::after{
     position: absolute;
     content: "";
     width: 0px;
@@ -117,16 +112,16 @@ i{
     transition: all 0.3s ease;
 }
 
-.container .left-section .sidebar .item#active a::after{
+  .left-section .sidebar .item#active a::after{
     width: 8px;
     height: 8px;
 }
 
-.container .left-section .pic  img{
+  .left-section .pic  img{
     width: 160px;
 }
 
-.container .left-section .upgrade{
+  .left-section .upgrade{
     background: #EBF6FF;
     height: 90px;
     display: flex;
@@ -138,13 +133,13 @@ i{
     cursor: pointer;
 }
 
-.container .left-section .upgrade .link{
+  .left-section .upgrade .link{
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.container .left-section .upgrade .link a{
+  .left-section .upgrade .link a{
     font-size: 12px;
 }
 
@@ -186,6 +181,7 @@ main .separator .info h3{
 
 main .separator .info a{
     margin-top: 6px;
+    margin-left: -20px;
     font-size: 14px;
 }
 
@@ -405,23 +401,23 @@ main .planning .item > i{
     cursor: pointer;
 }
 
-.container .right-section{
+  .right-section{
     padding: 40px 40px 0 40px;
 }
 
-.container .right-section .top{
+  .right-section .top{
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.container .right-section .top > i{
+  .right-section .top > i{
     color: #909090;
     position: relative;
     cursor: pointer;
 }
 
-.container .right-section .top > i::after{
+  .right-section .top > i::after{
     content: "";
     width: 8px;
     height: 8px;
@@ -431,7 +427,7 @@ main .planning .item > i{
     right: 0;
 }
 
-.container .right-section .top .profile{
+  .right-section .top .profile{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -442,16 +438,16 @@ main .planning .item > i{
     border-radius: 16px;
 }
 
-.container .right-section .top .profile > i{
+  .right-section .top .profile > i{
     cursor: pointer;
 }
 
-.container .right-section .top .profile .left{
+  .right-section .top .profile .left{
     display: flex;
     gap: 15px;
 }
 
-.container .right-section .top .profile .left img{
+  .right-section .top .profile .left img{
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -459,33 +455,33 @@ main .planning .item > i{
     object-position: top;
 }
 
-.container .right-section .top .profile .left .user h5{
+  .right-section .top .profile .left .user h5{
     font-size: 14px;
     font-weight: 600;
 }
 
-.container .right-section .top .profile .left .user a{
+  .right-section .top .profile .left .user a{
     font-size: 12px;
 }
 
-.container .right-section .separator#first{
+  .right-section .separator#first{
     margin-top: 8px;
 }
 
-.container .right-section .separator h4{
+  .right-section .separator h4{
     font-weight: bold;
     font-size: 24px;
     margin-top: 20px;
 }
 
-.container .right-section .stats{
+  .right-section .stats{
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin-top: 20px;
     gap: 20px;
 }
 
-.container .right-section .stats .item{
+  .right-section .stats .item{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -495,37 +491,37 @@ main .planning .item > i{
     border-radius: 20px;
 }
 
-.container .right-section .stats .item .top{
+  .right-section .stats .item .top{
     display: flex;
     flex-direction: column;
     align-items: start;
 }
 
-.container .right-section .stats .top p{
+  .right-section .stats .top p{
     font-size: 16px;
     color: #8EA3B7;
     font-weight: 500;
 }
 
-.container .right-section .stats .item .bottom{
+  .right-section .stats .item .bottom{
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.container .right-section .stats .item .bottom .line{
+  .right-section .stats .item .bottom .line{
     width: 4px;
     height: 30px;
     background: #369FFF;
     border-radius: 20px;
 }
 
-.container .right-section .stats .item .bottom h3{
+  .right-section .stats .item .bottom h3{
     font-size: 40px;
     color: #006ED3;
 }
 
-.container .right-section .weekly{
+  .right-section .weekly{
     margin-top: 20px;
     display: flex;
     align-items: center;
@@ -536,24 +532,24 @@ main .planning .item > i{
     border-radius: 16px;
 }
 
-.container .right-section .weekly .title{
+  .right-section .weekly .title{
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.container .right-section .weekly .title .line{
+  .right-section .weekly .title .line{
     width: 6px;
     height: 50px;
     background: #006ED3;
     border-radius: 20px;
 }
 
-.container .right-section .weekly h5{
+  .right-section .weekly h5{
     font-size: 16px;
 }
 
-.container .right-section .weekly .progress-bar{
+  .right-section .weekly .progress-bar{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -564,7 +560,7 @@ main .planning .item > i{
     conic-gradient(#CCC 25%, #006ED3 0%);
 }
 
-.container .right-section .weekly .progress-bar::before{
+  .right-section .weekly .progress-bar::before{
     content: "3/4";
     font-size: 14px;
     color: #000;
@@ -572,20 +568,20 @@ main .planning .item > i{
 
 @media screen and (max-width: 1200px) {
     
-    .container{
+    body{
         grid-template-columns: 300px 1fr;
     }
 
-    .container .left-section,
-    .container main,
-    .container .right-section{
+      .left-section,
+      main,
+      .right-section{
         padding: 20px 20px 0 20px;
     }
 
-    .container .left-section .logo a,
-    .container .left-section .sidebar a,
-    .container .left-section .pic img,
-    .container .left-section .upgrade{
+      .left-section .logo a,
+      .left-section .sidebar a,
+      .left-section .pic img,
+      .left-section .upgrade{
         display: none;
     }
 
@@ -593,11 +589,11 @@ main .planning .item > i{
 
 @media screen and (max-width: 992px) {
     
-    .container{
+    body{
         grid-template-columns: 1fr 1fr;
     }
 
-    .container .left-section{
+      .left-section{
         position: fixed;
         height: 60vh;
         background-color: #fff;
@@ -606,17 +602,17 @@ main .planning .item > i{
         top: -60vh;
     }
 
-    .container .left-section .logo{
+      .left-section .logo{
         flex-direction: column;
         gap: 20px;
     }
 
-    .container .left-section .logo .menu-btn,
-    main header .menu-btn{
+      .left-section .logo .menu-btn,
+    .main header .menu-btn{
         display: flex;
     }
 
-    main h5{
+    .main h5{
         font-size: 16px;
     }
 
@@ -625,7 +621,7 @@ main .planning .item > i{
     }
 
     main .separator .info h3,
-    .container .right-section .separator h4{
+      .right-section .separator h4{
         font-size: 20px;
     }
 
@@ -646,16 +642,16 @@ main .planning .item > i{
         padding: 8px;
     }
 
-    .container .right-section .stats .item{
+      .right-section .stats .item{
         height: 160px;
         padding: 20px;
     }
 
-    .container .right-section .stats .item .top p{
+      .right-section .stats .item .top p{
         font-size: 14px;
     }
 
-    .container .right-section .stats .item .bottom h3{
+      .right-section .stats .item .bottom h3{
         font-size: 36px;
     }
 
@@ -663,12 +659,12 @@ main .planning .item > i{
 
 @media screen and (max-width: 768px) {
     
-    .container{
+    body{
         grid-template-columns: 1fr;
         padding-top: 80px;
     }
 
-    .container .right-section > .top{
+      .right-section > .top{
         position: absolute;
         top: 0;
         right: 0;
@@ -677,7 +673,7 @@ main .planning .item > i{
         z-index: -100;
     }
 
-    .container .right-section .weekly{
+      .right-section .weekly{
         margin-bottom: 20px;
     }
 

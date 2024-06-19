@@ -13,246 +13,225 @@
     <title>Plan:Z | Dashboard</title>
 
     <style>
-    .container{
+    body{
         display: grid;
-        grid-template-columns: 300px 1fr 400px;
+        grid-template-columns: 250px 1fr 400px;
         height: 100vh;
     }
     </style>
 </head>
 
 <body>
-
-    <div class="container">
-        <aside class="left-section">
-            <div class="logo">
-                <button class="menu-btn" id="menu-close">
-                    <i class='bx bx-log-out-circle'></i>
-                </button>
-                <img src="{% static 'assets/logo.png' %}">
-                <a href="{% url 'dashboard' %}">Plan:Z</a>
+    <section class="left-section">
+        <div class="logo">
+            <button class="menu-btn" id="menu-close">
+                <i class='bx bx-log-out-circle'></i>
+            </button>
+            <img src="{% static 'assets/logo.png' %}">
+            <a href="{% url 'dashboard' %}">Plan:Z</a>
+        </div>
+        <div class="sidebar">
+            <div class="item" id="active">
+                <i class='bx bx-home-alt-2'></i>
+                <a href="{% url 'dashboard' %}">Overview</a>
             </div>
-
-            <div class="sidebar">
-                <div class="item" id="active">
-                    <i class='bx bx-home-alt-2'></i>
-                    <a href="{% url 'dashboard' %}">Overview</a>
-                </div>
-                <div class="item">
-                    <i class='bx bx-grid-alt'></i>
-                    <a href="{% url 'calendar' %}">Calendar</a>
-                </div>
-                <div class="item">
-                    <i class='bx bx-folder'></i>
-                    <a href="/#">ToDoList</a>
-                </div>
-                <div class="item">
-                    <i class='bx bx-message-square-dots'></i>
-                    <a href="{% url 'accountbook' %}">AccountBook</a>
-                </div>
-                <div class="item">
-                    <i class='bx bx-cog'></i>
-                    <a href="{% url 'admin:index' %}">Setting</a>
-                </div>
+            <div class="item">
+                <i class='bx bx-grid-alt'></i>
+                <a href="{% url 'calendar' %}">Calendar</a>
             </div>
-
-            <div class="pic">
-                <img src="{% static 'assets/pro.png' %}">
+            <div class="item">
+                <i class='bx bx-folder'></i>
+                <a href="{% url 'todoListApp:index' %}">ToDoList</a>
             </div>
-
-        </aside>
-
-        <main>
-            <header>
-                <button class="menu-btn" id="menu-open">
-                    <i class='bx bx-menu'></i>
-                </button>
-                <h5>Hello, welcome back!</h5>
-            </header>
-
-            <div class="separator">
-                <div class="info">
-                    <h3>My Plans</h3>
-                    <a href="{% url 'calendar' %}">View All</a>
-                </div>
+            <div class="item">
+                <i class='bx bx-message-square-dots'></i>
+                <a href="{% url 'accountbook' %}">AccountBook</a>
             </div>
-
-            <div class="analytics">
-                <div class="item">
-                    <div class="progress">
-                        <div class="info">
-                            <h5>Locations</h5>
-                            <p>35 Lessons</p>
-                        </div>
-                        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                            aria-valuemax="100"></div>
-                    </div>
-                    <i class='bx bx-map-pin'></i>
-                </div>
-                <div class="item">
-                    <div class="progress">
-                        <div class="info">
-                            <h5>People</h5>
-                            <p>30 Lessons</p>
-                        </div>
-                        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                            aria-valuemax="100"></div>
-                    </div>
-                    <i class='bx bx-user-voice'></i>
-                </div>
-                <div class="item">
-                    <div class="progress">
-                        <div class="info">
-                            <h5>Airport</h5>
-                            <p>45 Lessons</p>
-                        </div>
-                        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                            aria-valuemax="100"></div>
-                    </div>
-                    <i class='bx bxs-plane-land'></i>
-                </div>
-                <div class="item">
-                    <div class="progress">
-                        <div class="info">
-                            <h5>Places</h5>
-                            <p>20 Lessons</p>
-                        </div>
-                        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                            aria-valuemax="100"></div>
-                    </div>
-                    <i class='bx bxs-castle'></i>
-                </div>
+            <div class="item">
+                <i class='bx bx-cog'></i>
+                <a href="{% url 'admin:index' %}">Setting</a>
             </div>
-
-            <div class="separator">
-                <div class="info">
-                    <h3>AccountBook</h3>
-                    <a href="{% url 'accountbook' %}">View All</a>
-                </div>
-                <input type="date" id='currentDate'>
+        </div>
+    </section>
+    <main>
+        <header>
+            <button class="menu-btn" id="menu-open">
+                <i class='bx bx-menu'></i>
+            </button>
+            <h5>Hello, welcome back!</h5>
+        </header>
+        <div class="separator">
+            <div class="info">
+                <h3>My Plans</h3>
+                <a href="{% url 'calendar' %}">View All</a>
             </div>
-
-            <div class="planning">
-                <div class="item">
-                    <div class="left">
-                        <div class="icon">
-                            <i class='bx bx-book-alt'></i>
-                        </div>
-                        <div class="details">
-                            <h5>Reading - Topic 1</h5>
-                            <p>8:00 - 10:00</p>
-                        </div>
+        </div>
+        <div class="analytics">
+            <div class="item">
+                <div class="progress">
+                    <div class="info">
+                        <h5>Locations</h5>
+                        <p>35 Lessons</p>
                     </div>
-                    <i class='bx bx-dots-vertical-rounded'></i>
+                    <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                        aria-valuemax="100"></div>
                 </div>
-                <div class="item">
-                    <div class="left">
-                        <div class="icon">
-                            <i class='bx bx-edit-alt'></i>
-                        </div>
-                        <div class="details">
-                            <h5>Writing - Topic 2</h5>
-                            <p>13:00 - 14:00</p>
-                        </div>
-                    </div>
-                    <i class='bx bx-dots-vertical-rounded'></i>
-                </div>
-                <div class="item">
-                    <div class="left">
-                        <div class="icon">
-                            <i class='bx bx-headphone'></i>
-                        </div>
-                        <div class="details">
-                            <h5>Listening - Topic 1</h5>
-                            <p>15:00 - 16:00</p>
-                        </div>
-                    </div>
-                    <i class='bx bx-dots-vertical-rounded'></i>
-                </div>
-                <div class="item">
-                    <div class="left">
-                        <div class="icon">
-                            <i class='bx bx-volume-low'></i>
-                        </div>
-                        <div class="details">
-                            <h5>Listening - Topic 2</h5>
-                            <p>19:00 - 20:00</p>
-                        </div>
-                    </div>
-                    <i class='bx bx-dots-vertical-rounded'></i>
-                </div>
+                <i class='bx bx-map-pin'></i>
             </div>
-        </main>
-
-        <aside class="right-section">
-            <div class="top">
-                <i class='bx bx-bell'></i>
-            </div>
-
-            <div class="separator" id="first">
-                <h4>Statistics</h4>
-            </div>
-
-            <div class="stats">
-                <div class="item">
-                    <div class="top">
-                        <p>Courses</p>
-                        <p>Completed</p>
+            <div class="item">
+                <div class="progress">
+                    <div class="info">
+                        <h5>People</h5>
+                        <p>30 Lessons</p>
                     </div>
-                    <div class="bottom">
-                        <div class="line"></div>
-                        <h3>02</h3>
+                    <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                        aria-valuemax="100"></div>
+                </div>
+                <i class='bx bx-user-voice'></i>
+            </div>
+            <div class="item">
+                <div class="progress">
+                    <div class="info">
+                        <h5>Airport</h5>
+                        <p>45 Lessons</p>
+                    </div>
+                    <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                        aria-valuemax="100"></div>
+                </div>
+                <i class='bx bxs-plane-land'></i>
+            </div>
+            <div class="item">
+                <div class="progress">
+                    <div class="info">
+                        <h5>Places</h5>
+                        <p>20 Lessons</p>
+                    </div>
+                    <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                        aria-valuemax="100"></div>
+                </div>
+                <i class='bx bxs-castle'></i>
+            </div>
+        </div>
+        <div class="separator">
+            <div class="info">
+                <h3>AccountBook</h3>
+                <a href="{% url 'accountbook' %}">View All</a>
+            </div>
+            <input type="date" id='currentDate'>
+        </div>
+        <div class="planning">
+            <div class="item">
+                <div class="left">
+                    <div class="icon">
+                        <i class='bx bx-book-alt'></i>
+                    </div>
+                    <div class="details">
+                        <h5>Reading - Topic 1</h5>
+                        <p>8:00 - 10:00</p>
                     </div>
                 </div>
-                <div class="item">
-                    <div class="top">
-                        <p>Total Points</p>
-                        <p>Gained</p>
-                    </div>
-                    <div class="bottom">
-                        <div class="line"></div>
-                        <h3>250</h3>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="top">
-                        <p>Courses</p>
-                        <p>In Progress</p>
-                    </div>
-                    <div class="bottom">
-                        <div class="line"></div>
-                        <h3>03</h3>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="top">
-                        <p>Tasks</p>
-                        <p>Finished</p>
-                    </div>
-                    <div class="bottom">
-                        <div class="line"></div>
-                        <h3>250</h3>
-                    </div>
-                </div>
+                <i class='bx bx-dots-vertical-rounded'></i>
             </div>
-
-            <div class="separator">
-                <h4>Weekly Work</h4>
+            <div class="item">
+                <div class="left">
+                    <div class="icon">
+                        <i class='bx bx-edit-alt'></i>
+                    </div>
+                    <div class="details">
+                        <h5>Writing - Topic 2</h5>
+                        <p>13:00 - 14:00</p>
+                    </div>
+                </div>
+                <i class='bx bx-dots-vertical-rounded'></i>
             </div>
-
-            <div class="weekly">
-                <div class="title">
+            <div class="item">
+                <div class="left">
+                    <div class="icon">
+                        <i class='bx bx-headphone'></i>
+                    </div>
+                    <div class="details">
+                        <h5>Listening - Topic 1</h5>
+                        <p>15:00 - 16:00</p>
+                    </div>
+                </div>
+                <i class='bx bx-dots-vertical-rounded'></i>
+            </div>
+            <div class="item">
+                <div class="left">
+                    <div class="icon">
+                        <i class='bx bx-volume-low'></i>
+                    </div>
+                    <div class="details">
+                        <h5>Listening - Topic 2</h5>
+                        <p>19:00 - 20:00</p>
+                    </div>
+                </div>
+                <i class='bx bx-dots-vertical-rounded'></i>
+            </div>
+        </div>
+    </main>
+    <aside class="right-section">
+        <div class="top">
+            <i class='bx bx-bell'></i>
+        </div>
+        <div class="separator" id="first">
+            <h4>Statistics</h4>
+        </div>
+        <div class="stats">
+            <div class="item">
+                <div class="top">
+                    <p>Courses</p>
+                    <p>Completed</p>
+                </div>
+                <div class="bottom">
                     <div class="line"></div>
-                    <h5>Tasks This Week</h5>
-                </div>
-                <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                    aria-valuemax="100">
+                    <h3>02</h3>
                 </div>
             </div>
-
-        </aside>
-
-    </div>
+            <div class="item">
+                <div class="top">
+                    <p>Total Points</p>
+                    <p>Gained</p>
+                </div>
+                <div class="bottom">
+                    <div class="line"></div>
+                    <h3>250</h3>
+                </div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <p>Courses</p>
+                    <p>In Progress</p>
+                </div>
+                <div class="bottom">
+                    <div class="line"></div>
+                    <h3>03</h3>
+                </div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <p>Tasks</p>
+                    <p>Finished</p>
+                </div>
+                <div class="bottom">
+                    <div class="line"></div>
+                    <h3>250</h3>
+                </div>
+            </div>
+        </div>
+        <div class="separator">
+            <h4>Weekly Work</h4>
+        </div>
+        <div class="weekly">
+            <div class="title">
+                <div class="line"></div>
+                <h5>Tasks This Week</h5>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                aria-valuemax="100">
+            </div>
+        </div>
+    </aside>
 
 
     <script>
