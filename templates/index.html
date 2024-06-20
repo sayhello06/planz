@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,6 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -18,6 +20,41 @@
         grid-template-columns: 250px 1fr 400px;
         height: 100vh;
     }
+
+    .weekly {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        width: 100%;
+    }
+
+    .line {
+        flex-shrink: 0;
+        width: 5px;
+        height: 100%;
+        background-color: #000;
+    }
+
+    .title h5 {
+        margin: 0 10px;
+        flex-grow: 1;
+    }
+
+    .title i {
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    
     </style>
 </head>
 
@@ -62,62 +99,38 @@
         </header>
         <div class="separator">
             <div class="info">
-                <h3>My Plans</h3>
+                <h3>My Events</h3>
                 <a href="{% url 'calendar' %}">View All</a>
             </div>
         </div>
         <div class="analytics">
-            <div class="item">
-                <div class="progress">
-                    <div class="info">
-                        <h5>Locations</h5>
-                        <p>35 Lessons</p>
+            {% if events %}
+                {% for event in events %}
+                <div class="item">
+                    <div class="progress">
+                        <div class="info">
+                            <h5>{{ event.title }}</h5>
+                            <p>D-{{ event.days_left }}</p>
+                        </div>
                     </div>
-                    <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                        aria-valuemax="100"></div>
                 </div>
-                <i class='bx bx-map-pin'></i>
-            </div>
-            <div class="item">
-                <div class="progress">
-                    <div class="info">
-                        <h5>People</h5>
-                        <p>30 Lessons</p>
+                {% endfor %}
+            {% else %}
+                <div class="item">
+                    <div class="progress">
+                        <div class="info">
+                            <h5>No Event</h5>
+                            <h6><a href="{% url 'calendar' %}">click here to add ></a></h6>
+                        </div>
                     </div>
-                    <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                        aria-valuemax="100"></div>
                 </div>
-                <i class='bx bx-user-voice'></i>
-            </div>
-            <div class="item">
-                <div class="progress">
-                    <div class="info">
-                        <h5>Airport</h5>
-                        <p>45 Lessons</p>
-                    </div>
-                    <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                        aria-valuemax="100"></div>
-                </div>
-                <i class='bx bxs-plane-land'></i>
-            </div>
-            <div class="item">
-                <div class="progress">
-                    <div class="info">
-                        <h5>Places</h5>
-                        <p>20 Lessons</p>
-                    </div>
-                    <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                        aria-valuemax="100"></div>
-                </div>
-                <i class='bx bxs-castle'></i>
-            </div>
+            {% endif %}
         </div>
         <div class="separator">
             <div class="info">
                 <h3>AccountBook</h3>
                 <a href="{% url 'accountbook' %}">View All</a>
             </div>
-            <input type="date" id='currentDate'>
         </div>
         <div class="planning">
             <div class="item">
@@ -126,116 +139,96 @@
                         <i class='bx bx-book-alt'></i>
                     </div>
                     <div class="details">
-                        <h5>Reading - Topic 1</h5>
-                        <p>8:00 - 10:00</p>
+                        <h5>오늘의 수입 지출</h5>
+                        <p>수입: {{ daily_summary.income|floatformat:0|intcomma }}</p>
+                        <p>지출: {{ daily_summary.expense|floatformat:0|intcomma }}</p>
                     </div>
                 </div>
-                <i class='bx bx-dots-vertical-rounded'></i>
             </div>
             <div class="item">
                 <div class="left">
                     <div class="icon">
-                        <i class='bx bx-edit-alt'></i>
+                        <i class='bx bx-book-alt'></i>
                     </div>
                     <div class="details">
-                        <h5>Writing - Topic 2</h5>
-                        <p>13:00 - 14:00</p>
+                        <h5>이번 달 수입 지출</h5>
+                        <p>수입: {{ monthly_summary.income|floatformat:0|intcomma }}</p>
+                        <p>지출: {{ monthly_summary.expense|floatformat:0|intcomma }}</p>
                     </div>
                 </div>
-                <i class='bx bx-dots-vertical-rounded'></i>
-            </div>
-            <div class="item">
-                <div class="left">
-                    <div class="icon">
-                        <i class='bx bx-headphone'></i>
-                    </div>
-                    <div class="details">
-                        <h5>Listening - Topic 1</h5>
-                        <p>15:00 - 16:00</p>
-                    </div>
-                </div>
-                <i class='bx bx-dots-vertical-rounded'></i>
-            </div>
-            <div class="item">
-                <div class="left">
-                    <div class="icon">
-                        <i class='bx bx-volume-low'></i>
-                    </div>
-                    <div class="details">
-                        <h5>Listening - Topic 2</h5>
-                        <p>19:00 - 20:00</p>
-                    </div>
-                </div>
-                <i class='bx bx-dots-vertical-rounded'></i>
             </div>
         </div>
     </main>
     <aside class="right-section">
         <div class="top">
-            <i class='bx bx-bell'></i>
         </div>
-        <div class="separator" id="first">
-            <h4>Statistics</h4>
-        </div>
-        <div class="stats">
-            <div class="item">
-                <div class="top">
-                    <p>Courses</p>
-                    <p>Completed</p>
+        <div class="todo-box">
+            <div class="separator">
+                <h4>ToDoList</h4>
+            </div>
+            <div class="weekly">
+                {% for todo in todos %}
+                <div class="title" data-id="{{ todo.id }}">
+                    <div class="line" style="margin: 0 5px; float: left;"></div>
+                    <h5>{{ todo.title }}</h5>
+                    <i class="fa-sharp fa-solid fa-check"></i>
+                    <i class="fa-sharp fa-solid fa-x"></i>
                 </div>
-                <div class="bottom">
+                {% endfor %}
+            </div>
+        </div>
+
+        {% comment %} <div class="done-box">
+            <div class="separator">
+                <h4>Done List</h4>
+            </div>
+            <div class="weekly">
+                {% for done_todo in done_todos %}
+                <div class="title" data-id="{{ done_todo.id }}">
                     <div class="line"></div>
-                    <h3>02</h3>
+                    <h5>{{ done_todo.title }}</h5>
+                    <i class="fa-sharp fa-solid fa-x"></i>
                 </div>
+                {% endfor %}
             </div>
-            <div class="item">
-                <div class="top">
-                    <p>Total Points</p>
-                    <p>Gained</p>
-                </div>
-                <div class="bottom">
-                    <div class="line"></div>
-                    <h3>250</h3>
-                </div>
-            </div>
-            <div class="item">
-                <div class="top">
-                    <p>Courses</p>
-                    <p>In Progress</p>
-                </div>
-                <div class="bottom">
-                    <div class="line"></div>
-                    <h3>03</h3>
-                </div>
-            </div>
-            <div class="item">
-                <div class="top">
-                    <p>Tasks</p>
-                    <p>Finished</p>
-                </div>
-                <div class="bottom">
-                    <div class="line"></div>
-                    <h3>250</h3>
-                </div>
-            </div>
-        </div>
-        <div class="separator">
-            <h4>Weekly Work</h4>
-        </div>
-        <div class="weekly">
-            <div class="title">
-                <div class="line"></div>
-                <h5>Tasks This Week</h5>
-            </div>
-            <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                aria-valuemax="100">
-            </div>
-        </div>
+        </div> {% endcomment %}
     </aside>
 
 
     <script>
         $('#currentDate').val(new Date().toISOString().substring(0, 10));
+
+        $('.fa-check').click(function() {
+            var todoId = $(this).closest('.title').data('id');
+            $.ajax({
+                type: 'POST',
+                url: '{% url "todoListApp:mark_done" 0 %}'.replace('0', todoId),
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        $('[data-id="' + todoId + '"]').remove();
+                    }
+                }
+            });
+        });
+    
+        $('.fa-x').click(function() {
+            var todoId = $(this).closest('.title').data('id');
+            $.ajax({
+                type: 'POST',
+                url: '{% url "todoListApp:delete_todo" 0 %}'.replace('0', todoId),
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        $('[data-id="' + todoId + '"]').remove();
+                    }
+                }
+            });
+        });
     </script>
 </body>
 

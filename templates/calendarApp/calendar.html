@@ -100,11 +100,27 @@
             selectable: true,
             editable: true,
             select: function (info) {
+                $('#eventTitle').val('');
+                $('#startTime input').val('');
+                $('#endTime input').val('');
+                
                 $('#addEventModal').modal('show');
 
                 var startDateTimePicker = new tempusDominus.TempusDominus(document.getElementById('startTime'), {
                     defaultDate: info.start,
                     display: {
+                        icons: {
+                            type: 'icons',
+                            time: 'fa-solid fa-clock',
+                            date: 'fa-solid fa-calendar',
+                            up: 'fa-solid fa-arrow-up',
+                            down: 'fa-solid fa-arrow-down',
+                            previous: 'fa-solid fa-chevron-left',
+                            next: 'fa-solid fa-chevron-right',
+                            today: 'fa-solid fa-calendar-check',
+                            clear: 'fa-solid fa-trash',
+                            close: 'fa-solid fa-xmark'
+                          },
                         components: {
                             calendar: true,
                             date: true,
@@ -121,6 +137,18 @@
                 var endDateTimePicker = new tempusDominus.TempusDominus(document.getElementById('endTime'), {
                     defaultDate: info.end,
                     display: {
+                        icons: {
+                            type: 'icons',
+                            time: 'fa-solid fa-clock',
+                            date: 'fa-solid fa-calendar',
+                            up: 'fa-solid fa-arrow-up',
+                            down: 'fa-solid fa-arrow-down',
+                            previous: 'fa-solid fa-chevron-left',
+                            next: 'fa-solid fa-chevron-right',
+                            today: 'fa-solid fa-calendar-check',
+                            clear: 'fa-solid fa-trash',
+                            close: 'fa-solid fa-xmark'
+                          },
                         components: {
                             calendar: true,
                             date: true,
@@ -137,8 +165,20 @@
 
                 $('#saveEvent').off('click').on('click', function () {
                     var title = $('#eventTitle').val();
-                    var start = moment(startDateTimePicker.dates.getValue()).format('YYYY-MM-DD HH:mm');
-                    var end = moment(endDateTimePicker.dates.getValue()).format('YYYY-MM-DD HH:mm');
+                    var start = startDateTimePicker.viewDate;
+                    var end = endDateTimePicker.viewDate;
+
+                    var formattedStart = start.getFullYear() + '-' +
+                                        ('0' + (start.getMonth() + 1)).slice(-2) + '-' +
+                                        ('0' + start.getDate()).slice(-2) + ' ' +
+                                        ('0' + start.getHours()).slice(-2) + ':' +
+                                        ('0' + start.getMinutes()).slice(-2);
+
+                    var formattedEnd = end.getFullYear() + '-' +
+                                      ('0' + (end.getMonth() + 1)).slice(-2) + '-' +
+                                      ('0' + end.getDate()).slice(-2) + ' ' +
+                                      ('0' + end.getHours()).slice(-2) + ':' +
+                                      ('0' + end.getMinutes()).slice(-2);
 
                     if (title) {
                         $.ajax({
@@ -146,8 +186,8 @@
                             url: '/calendar/add_event',
                             data: {
                                 'title': title,
-                                'start': start,
-                                'end': end
+                                'start': formattedStart,
+                                'end': formattedEnd
                             },
                             dataType: "json",
                             success: function () {
@@ -162,17 +202,30 @@
                 });
             },
             eventResize: function (info) {
-                var start = moment(info.event.start).format('YYYY-MM-DD HH:mm');
-                var end = moment(info.event.end).format('YYYY-MM-DD HH:mm');
+                var start = info.event.start;
+                var end = info.event.end;
                 var title = info.event.title;
                 var id = info.event.id;
+
+                var formattedStart = start.getFullYear() + '-' +
+                                    ('0' + (start.getMonth() + 1)).slice(-2) + '-' +
+                                    ('0' + start.getDate()).slice(-2) + ' ' +
+                                    ('0' + start.getHours()).slice(-2) + ':' +
+                                    ('0' + start.getMinutes()).slice(-2);
+
+                var formattedEnd = end.getFullYear() + '-' +
+                                  ('0' + (end.getMonth() + 1)).slice(-2) + '-' +
+                                  ('0' + end.getDate()).slice(-2) + ' ' +
+                                  ('0' + end.getHours()).slice(-2) + ':' +
+                                  ('0' + end.getMinutes()).slice(-2);
+
                 $.ajax({
                     type: "GET",
                     url: '/calendar/update',
                     data: {
                         'title': title,
-                        'start': start,
-                        'end': end,
+                        'start': formattedStart,
+                        'end': formattedEnd,
                         'id': id
                     },
                     dataType: "json",
@@ -185,17 +238,30 @@
                 });
             },
             eventDrop: function (info) {
-                var start = moment(info.event.start).format('YYYY-MM-DD HH:mm');
-                var end = moment(info.event.end).format('YYYY-MM-DD HH:mm');
+                var start = info.event.start;
+                var end = info.event.end;
                 var title = info.event.title;
                 var id = info.event.id;
+
+                var formattedStart = start.getFullYear() + '-' +
+                                    ('0' + (start.getMonth() + 1)).slice(-2) + '-' +
+                                    ('0' + start.getDate()).slice(-2) + ' ' +
+                                    ('0' + start.getHours()).slice(-2) + ':' +
+                                    ('0' + start.getMinutes()).slice(-2);
+
+                var formattedEnd = end.getFullYear() + '-' +
+                                  ('0' + (end.getMonth() + 1)).slice(-2) + '-' +
+                                  ('0' + end.getDate()).slice(-2) + ' ' +
+                                  ('0' + end.getHours()).slice(-2) + ':' +
+                                  ('0' + end.getMinutes()).slice(-2);
+
                 $.ajax({
                     type: "GET",
                     url: '/calendar/update_event',
                     data: {
                         'title': title,
-                        'start': start,
-                        'end': end,
+                        'start': formattedStart,
+                        'end': formattedEnd,
                         'id': id
                     },
                     dataType: "json",
@@ -213,6 +279,18 @@
 
                 var editStartDateTimePicker = new tempusDominus.TempusDominus(document.getElementById('editStartTime'), {
                     display: {
+                        icons: {
+                            type: 'icons',
+                            time: 'fa-solid fa-clock',
+                            date: 'fa-solid fa-calendar',
+                            up: 'fa-solid fa-arrow-up',
+                            down: 'fa-solid fa-arrow-down',
+                            previous: 'fa-solid fa-chevron-left',
+                            next: 'fa-solid fa-chevron-right',
+                            today: 'fa-solid fa-calendar-check',
+                            clear: 'fa-solid fa-trash',
+                            close: 'fa-solid fa-xmark'
+                          },
                         components: {
                             calendar: true,
                             date: true,
@@ -228,6 +306,18 @@
                 });
                 var editEndDateTimePicker = new tempusDominus.TempusDominus(document.getElementById('editEndTime'), {
                     display: {
+                        icons: {
+                            type: 'icons',
+                            time: 'fa-solid fa-clock',
+                            date: 'fa-solid fa-calendar',
+                            up: 'fa-solid fa-arrow-up',
+                            down: 'fa-solid fa-arrow-down',
+                            previous: 'fa-solid fa-chevron-left',
+                            next: 'fa-solid fa-chevron-right',
+                            today: 'fa-solid fa-calendar-check',
+                            clear: 'fa-solid fa-trash',
+                            close: 'fa-solid fa-xmark'
+                          },
                         components: {
                             calendar: true,
                             date: true,
@@ -241,13 +331,26 @@
                         }
                     }
                 });
-                editStartDateTimePicker.dates.setValue(info.event.start);
-                editEndDateTimePicker.dates.setValue(info.event.end);
+
+                editStartDateTimePicker.dates.setValue(new tempusDominus.DateTime(info.event.start));
+                editEndDateTimePicker.dates.setValue(new tempusDominus.DateTime(info.event.end));
 
                 $('#updateEvent').off('click').on('click', function () {
                     var title = $('#editEventTitle').val();
-                    var start = moment(editStartDateTimePicker.dates.getValue()).format('YYYY-MM-DD HH:mm');
-                    var end = moment(editEndDateTimePicker.dates.getValue()).format('YYYY-MM-DD HH:mm');
+                    var start = editStartDateTimePicker.viewDate;
+                    var end = editEndDateTimePicker.viewDate;
+
+                    var formattedStart = start.getFullYear() + '-' +
+                                        ('0' + (start.getMonth() + 1)).slice(-2) + '-' +
+                                        ('0' + start.getDate()).slice(-2) + ' ' +
+                                        ('0' + start.getHours()).slice(-2) + ':' +
+                                        ('0' + start.getMinutes()).slice(-2);
+
+                    var formattedEnd = end.getFullYear() + '-' +
+                                      ('0' + (end.getMonth() + 1)).slice(-2) + '-' +
+                                      ('0' + end.getDate()).slice(-2) + ' ' +
+                                      ('0' + end.getHours()).slice(-2) + ':' +
+                                      ('0' + end.getMinutes()).slice(-2);
 
                     if (title) {
                         $.ajax({
@@ -255,8 +358,8 @@
                             url: '/calendar/update_event',
                             data: {
                                 'title': title,
-                                'start': start,
-                                'end': end,
+                                'start': formattedStart,
+                                'end': formattedEnd,
                                 'id': info.event.id
                             },
                             dataType: "json",

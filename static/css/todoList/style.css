@@ -34,8 +34,6 @@ body {
     width: 70%;
     line-height: normal;
     padding: 4px;
-
-    height: 36px;
     font-size: 24px;
 }
 .addToDoInfo::placeholder {

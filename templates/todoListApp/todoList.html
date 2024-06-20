@@ -1,29 +1,41 @@
 {% extends 'todoListApp/base.html' %}
 
 {% block content %}
-
     <!--주 제목-->
-    <div class="mainTitle">ToDoList</div>
+    <div class="mainTitle">ToDo List</div>
   
     <!--할일 정보 입력하는 곳-->
-    <form action="#" class="addToDo" onsubmit="return addActiveList();">
-    <input type="text" class="addToDoInfo" placeholder="Enter your to-do">
+    <form action="{% url 'todoListApp:add_todo' %}" method="post" class="addToDo">
+        {% csrf_token %}
+        <input type="text" name="title" class="addToDoInfo" placeholder="Enter your to-do">
     </form>
     
     <!--투두리스트-->
     <div class="list">
-      <!--투두리스트Active-->
-      <div class="activeToDo">
-        <div class="activeTitle">Active</div>
-        <ul type="none" class="listActive">
-        </ul>
-      </div>
+        <!--투두리스트 ToDo-->
+        <div class="activeToDo">
+            <div class="activeTitle">ToDo</div>
+            <ul type="none" class="listActive">
+                {% for todo in todos %}
+                <li>
+                    {{ todo.title }}
+                    <button onclick="location.href='{% url 'todoListApp:mark_done' todo.id %}'">Done</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-      <!--투두리스트Done-->
-      <div class="doneToDo">
-        <div class="doneTitle">Done</div>
-        <ul type="none" class="listDone">
-        </ul>
-      </div>
+        <!--투두리스트 Done-->
+        <div class="doneToDo">
+            <div class="doneTitle">Done</div>
+            <ul type="none" class="listDone">
+                {% for done_todo in done_todos %}
+                <li>
+                    {{ done_todo.title }}
+                    <button onclick="location.href='{% url 'todoListApp:delete_todo' done_todo.id %}'">Delete</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 {% endblock %}
