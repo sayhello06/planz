@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
+from django.utils.timezone import now
+import pytz
+
 
 from calendarApp.models import Event
 
 def calendar(request):
+
     all_events = Event.objects.all()
     context = {
         "events": all_events,

@@ -17,9 +17,10 @@
             <div class="activeTitle">ToDo</div>
             <ul type="none" class="listActive">
                 {% for todo in todos %}
-                <li>
+                <li data-id="{{ todo.id }}">
                     {{ todo.title }}
-                    <button onclick="location.href='{% url 'todoListApp:mark_done' todo.id %}'">Done</button>
+                    <button class="markDoneButton">Done</button>
+                    <button class="deleteTodoButton">Delete</button>
                 </li>
                 {% endfor %}
             </ul>
@@ -30,12 +31,59 @@
             <div class="doneTitle">Done</div>
             <ul type="none" class="listDone">
                 {% for done_todo in done_todos %}
-                <li>
+                <li data-id="{{ done_todo.id }}">
                     {{ done_todo.title }}
-                    <button onclick="location.href='{% url 'todoListApp:delete_todo' done_todo.id %}'">Delete</button>
+                    <button class="deleteTodoButton">Delete</button>
                 </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Mark as done
+            $('.markDoneButton').click(function(e) {
+                e.preventDefault();
+                var li = $(this).closest('li');
+                var todoId = li.data('id');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "todoListApp:mark_done" 0 %}'.replace('0', todoId),
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            li.remove();
+                            $('.listDone').append('<li data-id="' + todoId + '">' + li.html() + '</li>');
+                            $('.listDone li[data-id="' + todoId + '"] .markDoneButton').remove();
+                        }
+                    }
+                });
+            });
+
+            // Delete todo
+            $(document).on('click', '.deleteTodoButton', function(e) {
+                e.preventDefault();
+                var li = $(this).closest('li');
+                var todoId = li.data('id');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "todoListApp:delete_todo" 0 %}'.replace('0', todoId),
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            li.remove();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
