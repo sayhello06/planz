@@ -16,7 +16,11 @@ class DashboardView(View):
         upcoming_events = Event.objects.filter(start__gte=current_date).order_by('start')[:4]
         event_data = []
         for event in upcoming_events:
-            days_left = (event.start.date() - current_date).days
+            days_left = 0
+            if((event.start.date() - current_date).days != 0):
+                days_left = (event.start.date() - current_date).days
+            else:
+                days_left = " DAY"
             event_data.append({
                 'title': event.title,
                 'days_left': days_left
