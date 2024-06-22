@@ -12,3 +12,6 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.date} - {self.transaction_type} - {self.amount}"
+
+    class Meta:
+        db_table = "accountbookApp_db"
