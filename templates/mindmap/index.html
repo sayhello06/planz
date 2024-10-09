@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Map</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            position: relative;
+            height: 100vh;
+        }
+
+        h1 {
+            font-weight: 600;
+            color: #444;
+        }
+
+        .circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #ffe8e8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #555;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            position: absolute;
+        }
+
+        .circle input {
+            text-align: center;
+            border: none;
+            background-color: transparent;
+            color: #333;
+            width: 80%;
+            font-size: 18px;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .sub-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #d3eafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            position: absolute;
+        }
+
+        .sub-circle input {
+            text-align: center;
+            border: none;
+            background-color: transparent;
+            color: #333;
+            width: 80%;
+            font-size: 16px;
+            font-weight: 400;
+            outline: none;
+        }
+
+        #svg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        line {
+            stroke: #888;
+            stroke-width: 2;
+        }
+
+        /* 메인 서클을 화면 중앙에 배치 */
+        #main-circle {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 편집 모달 스타일 */
+        .edit-modal {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-modal button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-center mt-3">Mind Map</h1>
+    <!-- SVG 컨테이너 -->
+    <div id="svg-container">
+        <svg id="svg-lines" width="100%" height="100%"></svg>
+    </div>
+
+    <!-- 메인 키워드 서클 (화면 중앙에 위치) -->
+    <div class="circle" tabindex="0" id="main-circle">
+        <input type="text" id="main-input" placeholder=" Main keyword">
+    </div>
+
+    <div id="branches"></div>
+
+    <!-- 편집 모달 -->
+    <div class="edit-modal" id="edit-modal">
+        <input type="text" id="edit-input">
+        <button class="btn btn-primary" id="save-btn">Save</button>
+        <button class="btn btn-danger" id="delete-btn">Delete</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        let currentSubCircle = null; // 현재 편집할 서브 서클
+        
+
+        $(document).ready(function() {
+            // 서브 서클 생성 후 입력 가능하도록 화면 클릭 이벤트
+            $(document).click(function(e) {
+                // 클릭한 위치 좌표 가져오기
+                let clickX = e.pageX;
+                let clickY = e.pageY;
+
+                // 메인 키워드가 입력되지 않았으면 서브 서클 추가 불가
+                let main_keyword = $('#main-input').val();
+                if (main_keyword === '') {
+                    alert('메인 키워드를 입력해주세요!');
+                    return;
+                }
+
+                // 서브 서클 추가
+                addSubCircle(clickX, clickY);
+            });
+
+            // 메인 서클 클릭시 이벤트 전파 막음 (서브 서클 추가 방지)
+            $('#main-circle').click(function(e) {
+                e.stopPropagation();
+            });
+
+            // 서브 서클 추가 함수
+            function addSubCircle(x, y) {
+                // 새 서브 서클 생성
+                let subCircle = $('<div class="sub-circle"><input type="text" placeholder="Sub keyword"></div>');
+                $('#branches').append(subCircle);
+
+                // 서브 서클을 클릭한 위치에 배치
+                subCircle.css({
+                    left: x - subCircle.width() / 2 + 'px', // 클릭한 위치에 중앙 정렬
+                    top: y - subCircle.height() / 2 + 'px'
+                });
+
+                // 서브 서클 드래그 가능
+                subCircle.draggable({
+                    stop: function() {
+                        // 드래그 후 위치가 변경되면 다시 선을 그리기
+                        drawAllLines();
+                    }
+                });
+
+                // 서브 서클 내의 input에 포커스 주기
+                let subInput = subCircle.find('input');
+                subInput.focus();
+
+                // input 클릭 시 새로운 서클이 생기지 않도록 이벤트 전파 방지
+                subInput.click(function(e) {
+                    e.stopPropagation();
+                });
+
+                // 입력 완료 후 키워드를 표시하고 선 연결
+                subInput.keypress(function(e) {
+                    if (e.which === 13) { // 엔터 키 이벤트
+                        let subKeyword = $(this).val();
+                        if (subKeyword !== '') {
+                            $(this).parent().text(subKeyword); // 입력 값을 서브 서클에 표시
+                            drawLine($('#main-circle'), subCircle); // 메인 서클과 선 연결
+                        }
+                    }
+                });
+
+                // 서브 서클 클릭 시 편집 모달 표시
+                subCircle.click(function(e) {
+                    e.stopPropagation();
+                    currentSubCircle = $(this); // 현재 클릭한 서브 서클을 저장
+                    showEditModal(e.pageX, e.pageY, $(this).text());
+                });
+            }
+
+            // 메인 서클과 서브 서클을 선으로 연결하는 함수
+            function drawLine(mainCircle, subCircle) {
+                let svg = $('#svg-lines')[0];
+
+                // 메인 서클과 서브 서클의 중심 좌표 계산
+                let mainCircleOffset = mainCircle.offset();
+                let subCircleOffset = subCircle.offset();
+
+                let mainCenterX = mainCircleOffset.left + mainCircle.width() / 2;
+                let mainCenterY = mainCircleOffset.top + mainCircle.height() / 2;
+
+                let subCenterX = subCircleOffset.left + subCircle.width() / 2;
+                let subCenterY = subCircleOffset.top + subCircle.height() / 2;
+
+                // SVG 선 요소 추가
+                let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", mainCenterX);
+                line.setAttribute("y1", mainCenterY);
+                line.setAttribute("x2", subCenterX);
+                line.setAttribute("y2", subCenterY);
+
+                svg.appendChild(line);
+            }
+
+            // 모든 선 다시 그리기 (드래그 후 위치 변경 시)
+            function drawAllLines() {
+                $('#svg-lines').empty(); // 모든 선 제거
+                $('.sub-circle').each(function() {
+                    drawLine($('#main-circle'), $(this)); // 모든 서브 서클과 메인 서클을 연결
+                });
+            }
+
+            // 편집 모달 표시 함수
+            function showEditModal(x, y, text) {
+                $('#edit-input').val(text);
+                $('#edit-modal').css({
+                    left: x + 'px',
+                    top: y + 'px'
+                }).fadeIn();
+            }
+
+            // 편집 모달의 저장 버튼 클릭
+            $('#save-btn').click(function() {
+                let newKeyword = $('#edit-input').val();
+                if (currentSubCircle && newKeyword !== '') {
+                    currentSubCircle.text(newKeyword); // 서브 서클의 텍스트 업데이트
+                    drawAllLines(); // 선 다시 그리기
+                    $('#edit-modal').fadeOut(); // 모달 닫기
+                }
+            });
+
+            // 편집 모달의 삭제 버튼 클릭
+            $('#delete-btn').click(function() {
+                if (currentSubCircle) {
+                    currentSubCircle.remove(); // 서브 서클 삭제
+                    drawAllLines(); // 선 다시 그리기
+                    $('#edit-modal').fadeOut(); // 모달 닫기
+                }
+            });
+
+            // 편집 모달 외부 클릭 시 모달 닫기
+            $(document).click(function() {
+                $('#edit-modal').fadeOut();
+            });
+
+            // 편집 모달 클릭 시 이벤트 전파 방지
+            $('#edit-modal').click(function(e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>
