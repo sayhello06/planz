@@ -1,3 +1,4 @@
+#mindmap/models.py
 from django.db import models
 
 class MindMap(models.Model):
