@@ -172,9 +172,8 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         $(document).ready(function() {
-            // Function to handle keyword entry and AJAX submission
             $('#main-input').keypress(function(e) {
-                if (e.which === 13) { // Enter key pressed
+                if (e.which === 13) { // 메인 키워드 입력 후 enter 입력해야만 동작
                     const mainKeyword = $(this).val();
                     if (mainKeyword !== '') {
                         $.ajax({
@@ -186,7 +185,7 @@
                             },
                             success: function(response) {
                                 if (response.status === 'success') {
-                                    displayRecommendedKeywords(response.recommended_keywords);  // Display recommended keywords
+                                    displayRecommendedKeywords(response.recommended_keywords);  // 추천 키워드 출력
                                 } else {
                                     alert('Error occurred while adding the keyword.');
                                 }
@@ -199,47 +198,45 @@
                 }
             });
     
-            // Prevent sub-circle creation when clicking on "see more" or recommended keywords
             $(document).on('click', '#recommended-keywords, .speech-bubble, #see-more-button', function(e) {
-                e.stopPropagation();  // Prevents the sub-circle creation event from firing
+                e.stopPropagation();  // 추천 키워드 출력란에서는 서브 키워드 생성기능 정지
             });
     
-            // Function to display recommended keywords as clickable buttons
+            // 추천 키워드를 출력, 더보기 버튼
             function displayRecommendedKeywords(recommendedKeywords) {
                 let container = $('#recommended-keywords');
-                container.empty(); // Clear any previous keywords
+                container.empty();
     
                 const totalKeywords = recommendedKeywords.length;
-                const firstBatch = recommendedKeywords.slice(1, 6);  // Show only the first 5
-                const secondBatch = recommendedKeywords.slice(5);   // The remaining ones (up to 5 more)
+                const firstBatch = recommendedKeywords.slice(1, 6);  // 5개의 키워드를 우선 출력
+                const secondBatch = recommendedKeywords.slice(5);   // see more 버튼을 누르면 나머지 5개 출력(최대 10개)
     
-                // Display the first 5 keywords
                 firstBatch.forEach(function(keyword) {
                     let bubble = $('<div class="speech-bubble"></div>').text(keyword);
                     bubble.click(function(e) {
-                        e.stopPropagation();  // Prevents the sub-circle creation event from firing
-                        addSubKeyword(keyword);  // Add keyword as sub_keyword when clicked
+                        e.stopPropagation();  // 추천 키워드 출력란에서는 서브 키워드 생성기능 정지
+                        addSubKeyword(keyword);
                     });
                     container.append(bubble);
                 });
     
-                // If there are more than 5 keywords, show the "see more" button
+                // 5개 이상의 추천 키워드가 존재할 경우에만 더보기 버튼 생성
                 if (secondBatch.length > 0) {
                     let seeMoreButton = $('<button class="btn btn-primary mt-2" id="see-more-button">See More</button>');
                     container.append(seeMoreButton);
                     
-                    // On clicking the "see more" button, show the remaining keywords
+                    // 더보기 버튼 동작
                     seeMoreButton.click(function(e) {
-                        e.stopPropagation();  // Prevents the sub-circle creation event from firing
+                        e.stopPropagation();  // 추천 키워드 출력란에서는 서브 키워드 생성기능 정지
                         secondBatch.forEach(function(keyword) {
                             let bubble = $('<div class="speech-bubble"></div>').text(keyword);
                             bubble.click(function(e) {
-                                e.stopPropagation();  // Prevents the sub-circle creation event from firing
-                                addSubKeyword(keyword);  // Add keyword as sub_keyword when clicked
+                                e.stopPropagation();  // 추천 키워드 출력란에서는 서브 키워드 생성기능 정지
+                                addSubKeyword(keyword);
                             });
                             container.append(bubble);
                         });
-                        seeMoreButton.remove(); // Remove the button after showing all items
+                        seeMoreButton.remove(); // 더보기 버튼 누르면 버튼 삭제
                     });
                 }
             }
