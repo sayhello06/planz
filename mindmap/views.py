@@ -23,49 +23,19 @@ def load_map(request, keyword):
     return JsonResponse({'main_keyword': mindmap.main_keyword, 'sub_keywords': mindmap.sub_keywords})
 
 @csrf_exempt
-#def add_keyword(request):
-#    if request.method == 'POST':
-#        main_keyword = request.POST.get('main_keyword')
-#        sub_keyword = request.POST.get('sub_keyword', '')
-#
-#        if main_keyword:
-#            # Generate related words using FastText
-#            try:
-#                related_words = fasttext_model.wv.most_similar(main_keyword, topn=10)
-#                related_words = [word for word, similarity in related_words]  # Extract only words
-#                print("Related words from FastText:", related_words)  # Debug: Check related words
-#            except KeyError:
-#                related_words = []  # If the word is not in the vocabulary
-#                print("FastText KeyError: No related words found for", main_keyword)
-#
-#            # Now filter the related words using ChatGPT
-#            recommended_keywords = filter_with_gpt(related_words, main_keyword)
-#            print("Recommended keywords after GPT filter:", recommended_keywords)  # Debug: Check filtered words
-#
-#            # Get or create the MindMap object with the main_keyword
-#            mindmap, created = MindMap.objects.get_or_create(main_keyword=main_keyword)
-#
-#            # If the user manually added a sub_keyword, append it
-#            if sub_keyword:
-#                mindmap.sub_keywords.append(sub_keyword)
-#                mindmap.save()
-#
-#            return JsonResponse({'status': 'success', 'sub_keywords': mindmap.sub_keywords, 'recommended_keywords': recommended_keywords})
-#
-#    return JsonResponse({'status': 'error'})
 def add_keyword(request):
     if request.method == 'POST':
         main_keyword = request.POST.get('main_keyword')
         sub_keyword = request.POST.get('sub_keyword', '')
 
         if main_keyword:
-            # Use GPT-3.5 Turbo to generate recommended keywords
+            # Chat GPT 3.5 API가 메인 키워드를 기반으로 서브 키워드 추천
             recommended_keywords = get_recommended_keywords_with_gpt(main_keyword)
 
-            # Get or create the MindMap object with the main_keyword
+            # 메인 키워드를 통해 마인드맵의 object를 가져오거나 생성
             mindmap, created = MindMap.objects.get_or_create(main_keyword=main_keyword)
 
-            # If the user manually added a sub_keyword, append it
+            # 이용자가 임의로 서브 키워드를 추가하면 서브 키워드 array에 추가
             if sub_keyword:
                 mindmap.sub_keywords.append(sub_keyword)
                 mindmap.save()
