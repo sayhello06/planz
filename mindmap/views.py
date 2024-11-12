@@ -1,4 +1,4 @@
-import openai
+import openai, os.path
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from .models import MindMap
@@ -71,8 +71,26 @@ def get_recommended_keywords_with_gpt(main_keyword):
         # Remove any unnecessary numbers or bullet points
         recommended_keywords = [word.strip() for word in gpt_response.split(',') if word.strip() and not word[0].isdigit()]
         print("GPT Response (Keywords Only):", recommended_keywords)  # Debug: Check GPT response with only keywords
+        file_path = "keywords.txt"
+        file = "C:\\planz\keywords.txt"
+        if os.path.isfile(file):
+            with open(file_path, "a") as file:
+                file.write("main keyword : " + main_keyword + "\n\n")
+                file.write("recommended keywords : " + "\n")
+                for item in recommended_keywords:
+                    file.write(item+"\n")
+                file.write("-"*40 + "\n")
+        else:
+            with open(file_path, "w") as file:
+                file.write("main keyword : " + main_keyword + "\n")
+                file.write("recommended keywords : " + "\n")
+                for item in recommended_keywords:
+                    file.write(item+"\n")
+                file.write("-"*40 + "\n")
         return recommended_keywords
 
     except Exception as e:
         print("GPT Error:", e)  # Debug: Print GPT error
         return []
+    
+    
