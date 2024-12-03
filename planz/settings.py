@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'todoListApp',
     'django_extensions',
     'django.contrib.humanize',
-    'mindmap',
+    'sub_suggest',
 ]
 
 MIDDLEWARE = [

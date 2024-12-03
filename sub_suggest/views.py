@@ -1,25 +1,20 @@
 import openai, os.path
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from .models import MindMap
-from .forms import MindMapForm
+from .models import Sub_Suggest
+from .forms import SuggestForm
 from gensim.models import FastText
 from planz import settings
-from django.views.decorators.csrf import csrf_exempt  # For simplicity in testingfrom .models import MindMap
+from django.views.decorators.csrf import csrf_exempt  
 
-# Load the Word2Vec model
-# Assuming you've trained your Word2Vec model and saved it as 'word2vec.model'
-#fasttext_model = FastText.load_fasttext_format('images/cc.ko.300.bin')
-
-# Set OpenAI API Key (from your settings.py)
 openai.api_key = settings.OPENAI_API_KEY
 
 def index(request):
-    form = MindMapForm()
+    form = SuggestForm()
     return render(request, 'mindmap/index.html', {'form': form})
 
 def load_map(request, keyword):
-    mindmap = get_object_or_404(MindMap, main_keyword=keyword)
+    mindmap = get_object_or_404(Sub_Suggest, main_keyword=keyword)
     return JsonResponse({'main_keyword': mindmap.main_keyword, 'sub_keywords': mindmap.sub_keywords})
 
 @csrf_exempt
@@ -33,7 +28,7 @@ def add_keyword(request):
             recommended_keywords = get_recommended_keywords_with_gpt(main_keyword)
 
             # 메인 키워드를 통해 마인드맵의 object를 가져오거나 생성
-            mindmap, created = MindMap.objects.get_or_create(main_keyword=main_keyword)
+            mindmap, created = Sub_Suggest.objects.get_or_create(main_keyword=main_keyword)
 
             # 이용자가 임의로 서브 키워드를 추가하면 서브 키워드 array에 추가
             if sub_keyword:
@@ -93,4 +88,4 @@ def get_recommended_keywords_with_gpt(main_keyword):
         print("GPT Error:", e)  # Debug: Print GPT error
         return []
     
-    
+#해야할 일 : 변경된 주제에 맞게 변수 명 변경 / model 재설계 / SQL과 연동 고려 / 동장 방식 재설계 / html 수정

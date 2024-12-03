@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class MindmapConfig(AppConfig):
+class Sub_Config(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'mindmap'
+    name = 'sub_suggest'
