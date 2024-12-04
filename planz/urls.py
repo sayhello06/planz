@@ -9,9 +9,9 @@ from planz.views import DashboardView
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
     path('calendar/', include('calendarApp.urls')),
-    path('', DashboardView.as_view(), name='dashboard'),
+    #path('', DashboardView.as_view(), name='dashboard'),
     path('accountbook/', include('finance.urls')),
     path('todoList/', include('todoListApp.urls')),
-    path('suggest/', include('sub_suggest.urls')),
+    path('', include('sub_suggest.urls')),
 ]
 

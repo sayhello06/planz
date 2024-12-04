@@ -1,91 +1,150 @@
-import openai, os.path
+import openai, os.path, json
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from .models import Sub_Suggest
-from .forms import SuggestForm
-from gensim.models import FastText
+from .models import Project
 from planz import settings
 from django.views.decorators.csrf import csrf_exempt  
 
 openai.api_key = settings.OPENAI_API_KEY
 
 def index(request):
-    form = SuggestForm()
-    return render(request, 'mindmap/index.html', {'form': form})
+    return render(request, 'suggest/index.html')
 
-def load_map(request, keyword):
-    mindmap = get_object_or_404(Sub_Suggest, main_keyword=keyword)
-    return JsonResponse({'main_keyword': mindmap.main_keyword, 'sub_keywords': mindmap.sub_keywords})
+def recommend_topics_page(request):
+    return render(request, 'suggest/recommend_topics.html')
 
 @csrf_exempt
-def add_keyword(request):
+def recommend_topics(request):
     if request.method == 'POST':
-        main_keyword = request.POST.get('main_keyword')
-        sub_keyword = request.POST.get('sub_keyword', '')
+        try:
+            data = json.loads(request.body)
+            keywords = data.get('keywords', [])
 
-        if main_keyword:
-            # Chat GPT 3.5 API가 메인 키워드를 기반으로 서브 키워드 추천
-            recommended_keywords = get_recommended_keywords_with_gpt(main_keyword)
+            if not (3 <= len(keywords) <= 5):
+                return JsonResponse({
+                    "status": "error",
+                    "message": "Please provide between 3 and 5 keywords."
+                })
 
-            # 메인 키워드를 통해 마인드맵의 object를 가져오거나 생성
-            mindmap, created = Sub_Suggest.objects.get_or_create(main_keyword=main_keyword)
+            # GPT 호출
+            recommendations = get_topic_and_outline_with_gpt(keywords)
+            print("Recommendations from GPT:", recommendations)  # 디버깅
 
-            # 이용자가 임의로 서브 키워드를 추가하면 서브 키워드 array에 추가
-            if sub_keyword:
-                mindmap.sub_keywords.append(sub_keyword)
-                mindmap.save()
+            # recommendations가 None인지 확인
+            if recommendations is None:
+                return JsonResponse({
+                    "status": "error",
+                    "message": "GPT did not return valid recommendations."
+                })
 
-            return JsonResponse({'status': 'success', 'sub_keywords': mindmap.sub_keywords, 'recommended_keywords': recommended_keywords})
+            return JsonResponse({
+                "status": "success",
+                "recommendations": recommendations
+            })
 
-    return JsonResponse({'status': 'error'})
+        except Exception as e:
+            print("Unexpected Error in recommend_topics:", e)  # 오류 로그
+            return JsonResponse({"status": "error", "message": f"An unexpected error occurred: {str(e)}"})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-def get_recommended_keywords_with_gpt(main_keyword):
-    prompt = (f"Suggest a list(only 10 suggest please) of relevant keywords that would be useful for someone organizing or participating in a '{main_keyword}'. "
-              f"If the '{main_keyword}' is Korean, please suggested keywords translate in to Korean and write like this keyword - 키워드"
-              f"Just return the keywords, separated by commas.")
+@csrf_exempt
+def save_project(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            selected_title = data.get('title')
+            selected_produce = data.get('produce')
+            keywords = data.get('keywords', [])
+
+            if not selected_title or not selected_produce:
+                return JsonResponse({
+                    "status": "error",
+                    "message": "Title and produce are required to save the project."
+                })
+
+            # 데이터베이스에 저장
+            project = Project.objects.create(
+                title=selected_title,
+                produce=selected_produce,
+                keywords=keywords
+            )
+
+            return JsonResponse({"status": "success", "project_id": project.id})
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Invalid JSON data"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": f"An unexpected error occurred: {str(e)}"})
     
-    print("GPT Prompt:", prompt)  # Debug: Check the prompt being sent to GPT
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def get_topic_and_outline_with_gpt(keywords):
+    # 키워드 배열을 문자열로 변환
+    prompt_keywords = ', '.join(keywords)
+
+    # GPT API 프롬프트 생성
+    prompt = f"""
+    다음 키워드를 기반으로 5개의 주제와 개요를 추천해주세요:
+    키워드를 합쳤을 때 재밌는 주제가 나올 것 같으면 최우선적으로 추천해주세요.
+    키워드: {prompt_keywords}
+
+    결과는 반드시 JSON 배열로 제공해주세요. 예:
+    [
+        {{"title": "주제 제목 1", "produce": "주제 개요 1"}},
+        {{"title": "주제 제목 2", "produce": "주제 개요 2"}},
+        ...
+    ]
+    """
 
     try:
-        # Use GPT-3.5 Turbo to generate recommendations
+        # GPT 호출
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=100,
-            n=1,
+            max_tokens=1000,
             temperature=0.7
         )
-        
-        # Extract the content (expected to be a comma-separated list of keywords)
-        gpt_response = response['choices'][0]['message']['content'].strip()
 
-        # Now, split the response into individual keywords
-        # Remove any unnecessary numbers or bullet points
-        recommended_keywords = [word.strip() for word in gpt_response.split(',') if word.strip() and not word[0].isdigit()]
-        print("GPT Response (Keywords Only):", recommended_keywords)  # Debug: Check GPT response with only keywords
-        file_path = "keywords.txt"
-        file = "C:\\planz\keywords.txt"
-        if os.path.isfile(file):
-            with open(file_path, "a") as file:
-                file.write("main keyword : " + main_keyword + "\n\n")
-                file.write("recommended keywords : " + "\n")
-                for item in recommended_keywords:
-                    file.write(item+"\n")
-                file.write("-"*40 + "\n")
-        else:
-            with open(file_path, "w") as file:
-                file.write("main keyword : " + main_keyword + "\n")
-                file.write("recommended keywords : " + "\n")
-                for item in recommended_keywords:
-                    file.write(item+"\n")
-                file.write("-"*40 + "\n")
-        return recommended_keywords
+        # GPT 응답 텍스트 추출
+        gpt_response_text = response['choices'][0]['message']['content']
+        print("GPT Response (Raw):", gpt_response_text)  # GPT 원본 응답 디버깅
+
+        # JSON 파싱
+        gpt_response_json = json.loads(gpt_response_text)
+        print("GPT Response (Parsed):", gpt_response_json)  # 파싱된 JSON 디버깅
+
+        return gpt_response_json
+
+    except json.JSONDecodeError as e:
+        print("JSON Decode Error:", e)  # JSON 파싱 오류 로그
+        return None
 
     except Exception as e:
-        print("GPT Error:", e)  # Debug: Print GPT error
-        return []
+        print("Unexpected Error:", e)  # 기타 오류 로그
+        return None
     
+def list_projects(request):
+    if request.method == 'GET':
+        # 데이터베이스에서 모든 프로젝트 가져오기
+        projects = Project.objects.all().values("id", "title", "produce", "keywords", "created_at")
+        return JsonResponse({"status": "success", "projects": list(projects)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def project_detail(request, project_id):
+    try:
+        project = Project.objects.get(id=project_id)
+        return JsonResponse({
+            "status": "success",
+            "id": project.id,
+            "title": project.title,
+            "produce": project.produce,
+            "keywords": project.keywords,
+            "created_at": project.created_at
+        })
+    except Project.DoesNotExist:
+        return JsonResponse({"status": "error", "message": "Project not found"})
+
 #해야할 일 : 변경된 주제에 맞게 변수 명 변경 / model 재설계 / SQL과 연동 고려 / 동장 방식 재설계 / html 수정

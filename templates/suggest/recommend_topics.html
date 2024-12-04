@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Suggest - Recommended Topics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-gray-800 text-white">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <div class="text-2xl font-bold">
+        <a href="/" class="hover:text-gray-400">AI Suggest</a>
+      </div>
+      <nav class="space-x-6 text-sm font-medium">
+        <a href="/" class="hover:text-gray-400">Home</a>
+        <a href="#about" class="hover:text-gray-400">About Us</a>
+        <a href="/recommend_topics" class="hover:text-gray-400">AI Suggest</a>
+        <a href="#others" class="hover:text-gray-400">Others</a>
+        <a href="/login" class="hover:text-gray-400">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 bg-gray-100 py-12">
+    <div class="container mx-auto px-6">
+      <!-- 키워드 입력 -->
+      <section class="mb-12">
+        <h1 class="text-4xl font-bold text-center mb-6">Recommend a Topic</h1>
+        <p class="text-center text-gray-600 mb-8">Enter between 3 and 5 keywords to get topic recommendations.</p>
+        <form id="keywordForm" class="flex flex-col items-center">
+          <input 
+            id="keywordsInput" 
+            type="text" 
+            placeholder="키워드를 입력해주세요. 쉼표로 구분합니다." 
+            class="w-full md:w-2/3 p-3 border rounded-lg mb-4"
+          />
+          <button 
+            type="button" 
+            onclick="fetchRecommendations()" 
+            class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700"
+          >
+            Get Recommendations
+          </button>
+        </form>
+      </section>
+
+      <!-- 추천 결과 -->
+      <section id="recommendationsSection" class="hidden">
+        <h2 class="text-2xl font-bold mb-4">Recommendations</h2>
+        <div id="recommendationsList" class="space-y-4">
+          <!-- 주제 및 개요 카드들이 동적으로 추가될 부분 -->
+        </div>
+        <button 
+          id="saveButton" 
+          class="mt-6 bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 hidden"
+          onclick="saveSelection()"
+        >
+          Save Selection
+        </button>
+      </section>
+    </div>
+  </main>
+
+  {% comment %} <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-300">
+    <div class="container mx-auto px-6 py-8">
+      <div class="text-center text-sm">
+        <p class="mb-2">© 2024 AI Suggest. All Rights Reserved.</p>
+        <p>대표자: 이승택 | 사업자등록번호: 123-45-67890 | 통신판매업 신고번호: 제2024-서울강남-01234호</p>
+        <p>주소: 서울특별시 강남구 테헤란로 123, 4층 | 고객센터: 010-9442-8244 | 이메일: sayhello06@naver.com</p>
+        <p>이 웹사이트는 이용약관 및 개인정보 처리방침에 따라 운영됩니다.</p>
+      </div>
+    </div>
+  </footer> {% endcomment %}
+
+  <!-- JavaScript -->
+  <script>
+    async function fetchRecommendations() {
+      const keywords = document.getElementById('keywordsInput').value.split(',').map(k => k.trim());
+      if (keywords.length < 3 || keywords.length > 5) {
+        alert('Please enter between 3 and 5 keywords.');
+        return;
+      }
+    
+      const response = await fetch('/recommendation/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ keywords }),
+      });
+    
+      // 디버깅: 응답 확인
+      const data = await response.json();
+      console.log("Response Data:", data); // 디버깅: 응답 데이터 출력
+    
+      if (data.status === 'success' && Array.isArray(data.recommendations)) {
+        displayRecommendations(data.recommendations);
+      } else {
+        alert(data.message || 'An error occurred.');
+      }
+    }
+
+    function displayRecommendations(recommendations) {
+      if (!recommendations || !Array.isArray(recommendations)) {
+        console.error("Invalid recommendations data:", recommendations);
+        alert("Failed to load recommendations. Please try again.");
+        return;
+      }
+    
+      const recommendationsSection = document.getElementById('recommendationsSection');
+      const recommendationsList = document.getElementById('recommendationsList');
+      const saveButton = document.getElementById('saveButton');
+    
+      // 추천 결과 섹션 표시
+      recommendationsSection.classList.remove('hidden');
+      recommendationsList.innerHTML = ''; // 기존 내용을 초기화
+    
+      // 추천 데이터를 HTML로 생성
+      recommendations.forEach((rec, index) => {
+        const card = document.createElement('div');
+        card.className = 'p-4 bg-white rounded-lg shadow';
+        card.innerHTML = `
+          <h3 class="text-lg font-bold">${rec.title}</h3>
+          <p class="text-gray-700">${rec.produce}</p>
+          <button 
+            class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" 
+            onclick="selectRecommendation(${index})"
+          >
+            Select
+          </button>
+        `;
+        recommendationsList.appendChild(card);
+      });
+    
+      saveButton.classList.remove('hidden'); // 저장 버튼 표시
+    }
+
+    let selectedRecommendation = null;
+
+    function selectRecommendation(index) {
+      const recommendations = document.querySelectorAll('#recommendationsList > div');
+      recommendations.forEach((rec, i) => {
+        rec.classList.toggle('border-blue-500', i === index);
+      });
+      selectedRecommendation = index;
+    }
+
+    async function saveSelection() {
+      if (selectedRecommendation === null) {
+        alert('Please select a recommendation.');
+        return;
+      }
+    
+      const title = document.querySelector(`#recommendationsList > div:nth-child(${selectedRecommendation + 1}) h3`).textContent;
+      const produce = document.querySelector(`#recommendationsList > div:nth-child(${selectedRecommendation + 1}) p`).textContent;
+    
+      const keywords = document.getElementById('keywordsInput').value.split(',').map(k => k.trim());
+    
+      const response = await fetch('/save_project/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, produce, keywords }),
+      });
+    
+      const data = await response.json();
+      if (data.status === 'success') {
+        alert('Project saved successfully!');
+        window.location.reload();
+      } else {
+        alert(data.message || 'An error occurred.');
+      }
+    }
+  </script>
+
+</body>
+</html>

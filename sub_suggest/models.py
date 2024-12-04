@@ -1,6 +1,11 @@
-#mindmap/models.py
 from django.db import models
 
-class Sub_Suggest(models.Model):
-    main_keyword = models.CharField(max_length=100)
-    sub_keywords = models.JSONField(default=list)  # 서브 키워드들을 JSON 형태로 저장
+class Project(models.Model):
+    title = models.CharField(max_length=255)  # 주제 제목
+    produce = models.TextField()  # 주제 개요
+    keywords = models.JSONField()  # 입력된 키워드 (JSON 배열로 저장)
+    created_at = models.DateTimeField(auto_now_add=True)  # 생성 날짜
+    updated_at = models.DateTimeField(auto_now=True)  # 업데이트 날짜
+
+    def __str__(self):
+        return self.title
