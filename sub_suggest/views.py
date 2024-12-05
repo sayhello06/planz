@@ -128,23 +128,29 @@ def get_topic_and_outline_with_gpt(keywords):
 def list_projects(request):
     if request.method == 'GET':
         # 데이터베이스에서 모든 프로젝트 가져오기
-        projects = Project.objects.all().values("id", "title", "produce", "keywords", "created_at")
-        return JsonResponse({"status": "success", "projects": list(projects)})
+        #projects = Project.objects.all().values("id", "title", "produce", "keywords", "created_at")
+        projects = Project.objects.all().order_by('-created_at')
+        return render(request, 'suggest/list_projects.html', {'projects': projects})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 def project_detail(request, project_id):
+    # try:
+    #     project = Project.objects.get(id=project_id)
+    #     return JsonResponse({
+    #         "status": "success",
+    #         "id": project.id,
+    #         "title": project.title,
+    #         "produce": project.produce,
+    #         "keywords": project.keywords,
+    #         "created_at": project.created_at
+    #     })
+    # except Project.DoesNotExist:
+    #     return JsonResponse({"status": "error", "message": "Project not found"})
     try:
         project = Project.objects.get(id=project_id)
-        return JsonResponse({
-            "status": "success",
-            "id": project.id,
-            "title": project.title,
-            "produce": project.produce,
-            "keywords": project.keywords,
-            "created_at": project.created_at
-        })
+        return render(request, 'suggest/project_detail.html', {'project': project})
     except Project.DoesNotExist:
-        return JsonResponse({"status": "error", "message": "Project not found"})
+        return render(request, '404.html', status=404)
 
 #해야할 일 : 변경된 주제에 맞게 변수 명 변경 / model 재설계 / SQL과 연동 고려 / 동장 방식 재설계 / html 수정

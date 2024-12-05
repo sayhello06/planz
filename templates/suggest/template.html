@@ -1,0 +1,20 @@
+{% extends "suggest/list_projects.html" %}
+
+{% block header %}
+<header class="bg-gray-800 text-white">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <!-- 로고 -->
+      <div class="text-2xl font-bold">
+        <a href="/" class="hover:text-gray-400">AI Suggest</a>
+      </div>
+      <!-- 네비게이션 메뉴 -->
+      <nav class="space-x-6 text-sm font-medium">
+        <a href="/" class="hover:text-gray-400">Home</a>
+        <a href="#about" class="hover:text-gray-400">About Us</a>
+        <a href="/recommend_topics" class="hover:text-gray-400">AI Suggest</a>
+        <a href="#others" class="hover:text-gray-400">Others</a>
+        <a href="/login" class="hover:text-gray-400">Login</a>
+      </nav>
+    </div>
+  </header>
+  {% endblock %}

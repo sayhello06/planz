@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <header class="bg-gray-800 text-white">
+        <div class="container mx-auto flex justify-between items-center py-4 px-6">
+          <!-- 로고 -->
+          <div class="text-2xl font-bold">
+            <a href="/" class="hover:text-gray-400">AI Suggest</a>
+          </div>
+          <!-- 네비게이션 메뉴 -->
+          <nav class="space-x-6 text-sm font-medium">
+            <a href="/" class="hover:text-gray-400">Home</a>
+            <a href="#about" class="hover:text-gray-400">About Us</a>
+            <a href="/recommend_topics" class="hover:text-gray-400">AI Suggest</a>
+            <a href="/list_projects" class="hover:text-gray-400">Projects</a>
+            <a href="#others" class="hover:text-gray-400">Others</a>
+            <a href="#login" class="hover:text-gray-400">Login</a>
+          </nav>
+        </div>
+      </header>
+
+  <main class="container mx-auto py-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for project in projects %}
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h2 class="text-xl font-bold mb-2">{{ project.title }}</h2>
+          <p class="text-gray-600">{{ project.produce|truncatewords:20 }}</p>
+          <a href="{% url 'project_detail' project.id %}" 
+             class="text-blue-500 mt-4 block hover:underline">
+            View Details
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </main>
+
+  <footer class="bg-gray-800 text-white text-center py-4">
+    <p>© 2024 AI Suggest. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
