@@ -14,10 +14,9 @@ body {
 .mainTitle {
     display: flex;
     justify-content: center;
-    font-size: 48px;
     font-weight: 600;
-    padding-top: 48px;
-    padding-bottom: 72px;
+    padding-top: 28px;
+    padding-bottom: 24px;
     margin: 12px 10%;
     border-bottom: 1px solid var(--line-color);
 }
@@ -42,7 +41,7 @@ body {
     font-style: oblique;
     font-family: var(--font);
     color: var(--line-color);
-    margin: 5px;
+    margin: 10px;
 }
 
 /*투두 리스트*/
