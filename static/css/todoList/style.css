@@ -33,14 +33,16 @@ body {
 .addToDoInfo {
     width: 70%;
     line-height: normal;
-    padding: 4px;
+    border: 2px;
+    padding: 7px;
+    margin: 5px;
     font-size: 24px;
 }
 .addToDoInfo::placeholder {
     font-style: oblique;
     font-family: var(--font);
     color: var(--line-color);
-    margin: 2px;
+    margin: 5px;
 }
 
 /*투두 리스트*/

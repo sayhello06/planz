@@ -1,13 +1,13 @@
-{% extends 'todoListApp/base.html' %}
+{% extends 'suggest/index.html' %}
 
-{% block content %}
+{% block todoApp %}
     <!--주 제목-->
     <div class="mainTitle">ToDo List</div>
   
     <!--할일 정보 입력하는 곳-->
     <form action="{% url 'todoListApp:add_todo' %}" method="post" class="addToDo">
         {% csrf_token %}
-        <input type="text" name="title" class="addToDoInfo" placeholder="Enter your to-do">
+        <input type="text" name="title" class="text-gray-600 addToDoInfo" placeholder="Enter your to-do">
     </form>
     
     <!--투두리스트-->

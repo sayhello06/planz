@@ -1,7 +1,7 @@
+{% extends "suggest/index.html" %}
+{% block calendarScripts %}
 {% load static %}
-<html>
-<head>
-<meta charset='utf-8' />
+
     <title>Plan:z | CalendarApp</title>
     <link href="{% static '/css/styles.css' %}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
@@ -46,50 +46,4 @@
             text-decoration: none;
         }
     </style>
-</head>
-<body>
-    <section class="left-section">
-        <div class="logo">
-            <button class="menu-btn" id="menu-close">
-                <i class='bx bx-log-out-circle'></i>
-            </button>
-            <img src="{% static 'assets/logo.png' %}">
-            <a href="{% url 'dashboard' %}">Plan:Z</a>
-        </div>
-
-        <div class="sidebar">
-            <div class="item" id="active">
-                <i class='bx bx-home-alt-2'></i>
-                <a href="{% url 'dashboard' %}">Overview</a>
-            </div>
-            <div class="item">
-                <i class='bx bx-grid-alt'></i>
-                <a href="{% url 'calendar' %}">Calendar</a>
-            </div>
-            <div class="item">
-                <i class='bx bx-folder'></i>
-                <a href="{% url 'todoListApp:index' %}">ToDoList</a>
-            </div>
-            <div class="item">
-                <i class='bx bx-message-square-dots'></i>
-                <a href="{% url 'accountbook' %}" >AccountBook</a>
-            </div>
-            <div class="item">
-                <i class='bx bx-cog'></i>
-                <a href="{% url 'admin:index' %}">Setting</a>
-            </div>
-        </div>
-
-    </section>
-
-    <main class="main">
-        <div class="main_calendar">
-        {% block content %}
-        {% endblock %}
-
-        {% block scripts %}
-        {% endblock %}
-        </div>
-    </main>
-</body>
-</html>
+    {% endblock %}

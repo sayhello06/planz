@@ -1,4 +1,5 @@
 import openai, os.path, json
+from django.views.decorators.http import require_POST
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from .models import Project
@@ -8,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 openai.api_key = settings.OPENAI_API_KEY
 
 def index(request):
-    return render(request, 'suggest/index.html')
+    return render(request, 'suggest/intro.html')
 
 def recommend_topics_page(request):
     return render(request, 'suggest/recommend_topics.html')
@@ -76,6 +77,54 @@ def save_project(request):
             return JsonResponse({"status": "error", "message": f"An unexpected error occurred: {str(e)}"})
     
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    
+def list_projects(request):
+    if request.method == 'GET':
+        # 데이터베이스에서 모든 프로젝트 가져오기
+        #projects = Project.objects.all().values("id", "title", "produce", "keywords", "created_at")
+        projects = Project.objects.all().order_by('-created_at')
+        return render(request, 'suggest/list_projects.html', {'projects': projects})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def project_detail(request, project_id):
+    # try:
+    #     project = Project.objects.get(id=project_id)
+    #     return JsonResponse({
+    #         "status": "success",
+    #         "id": project.id,
+    #         "title": project.title,
+    #         "produce": project.produce,
+    #         "keywords": project.keywords,
+    #         "created_at": project.created_at
+    #     })
+    # except Project.DoesNotExist:
+    #     return JsonResponse({"status": "error", "message": "Project not found"})
+    try:
+        project = Project.objects.get(id=project_id)
+        return render(request, 'suggest/project_detail.html', {'project': project})
+    except Project.DoesNotExist:
+        return render(request, '404.html', status=404)
+    
+@csrf_exempt
+@require_POST
+def delete_project(request):
+    try:
+        data = json.loads(request.body)
+        project_id = data.get('project_id')
+
+        if not project_id:
+            return JsonResponse({"status": "error", "message": "Project ID is required."})
+
+        # 프로젝트 삭제
+        project = get_object_or_404(Project, id=project_id)
+        project.delete()
+
+        return JsonResponse({"status": "success", "message": "Project deleted successfully."})
+
+    except Exception as e:
+        print("Unexpected Error in delete_project:", e)
+        return JsonResponse({"status": "error", "message": f"An unexpected error occurred: {str(e)}"})
 
 def get_topic_and_outline_with_gpt(keywords):
     # 키워드 배열을 문자열로 변환
@@ -125,32 +174,4 @@ def get_topic_and_outline_with_gpt(keywords):
         print("Unexpected Error:", e)  # 기타 오류 로그
         return None
     
-def list_projects(request):
-    if request.method == 'GET':
-        # 데이터베이스에서 모든 프로젝트 가져오기
-        #projects = Project.objects.all().values("id", "title", "produce", "keywords", "created_at")
-        projects = Project.objects.all().order_by('-created_at')
-        return render(request, 'suggest/list_projects.html', {'projects': projects})
-
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-
-def project_detail(request, project_id):
-    # try:
-    #     project = Project.objects.get(id=project_id)
-    #     return JsonResponse({
-    #         "status": "success",
-    #         "id": project.id,
-    #         "title": project.title,
-    #         "produce": project.produce,
-    #         "keywords": project.keywords,
-    #         "created_at": project.created_at
-    #     })
-    # except Project.DoesNotExist:
-    #     return JsonResponse({"status": "error", "message": "Project not found"})
-    try:
-        project = Project.objects.get(id=project_id)
-        return render(request, 'suggest/project_detail.html', {'project': project})
-    except Project.DoesNotExist:
-        return render(request, '404.html', status=404)
-
 #해야할 일 : 변경된 주제에 맞게 변수 명 변경 / model 재설계 / SQL과 연동 고려 / 동장 방식 재설계 / html 수정

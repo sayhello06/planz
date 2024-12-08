@@ -1,48 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Suggest - Recommended Topics</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="flex flex-col min-h-screen">
+{% extends "suggest/index.html" %}
 
-  <!-- Header -->
-  <header class="bg-gray-800 text-white">
-    <div class="container mx-auto flex justify-between items-center py-4 px-6">
-      <div class="text-2xl font-bold">
-        <a href="/" class="hover:text-gray-400">AI Suggest</a>
-      </div>
-      <nav class="space-x-6 text-sm font-medium">
-        <a href="/" class="hover:text-gray-400">Home</a>
-        <a href="#about" class="hover:text-gray-400">About Us</a>
-        <a href="/recommend_topics" class="hover:text-gray-400">AI Suggest</a>
-        <a href="/list_projects" class="hover:text-gray-400">Projects</a>
-        <a href="#others" class="hover:text-gray-400">Others</a>
-        <a href="#login" class="hover:text-gray-400">Login</a>
-      </nav>
-    </div>
-  </header>
-
+{% block recommend %}
   <!-- Main Content -->
-  <main class="flex-1 bg-gray-100 py-12">
+  <main class="flex-1 bg-cover bg-center text-center text-white object-cover py-12" style="background-image: url('https://i.ibb.co/d0Kn4qN/background.webp');">
     <div class="container mx-auto px-6">
       <!-- 키워드 입력 -->
       <section class="mb-12">
-        <h1 class="text-4xl font-bold text-center mb-6">Recommend a Topic</h1>
-        <p class="text-center text-gray-600 mb-8">Enter between 3 and 5 keywords to get topic recommendations.</p>
-        <form id="keywordForm" class="flex flex-col items-center">
+        <h1 class="font-mono text-4xl font-bold text-center mb-6">Recommend a Topic</h1>
+        <p class="font-mono text-center text-white-600 mb-8">Enter between 3 and 5 keywords to get topic recommendations.</p>
+        <form id="keywordForm" class="flex flex-col items-center text-black">
           <input 
             id="keywordsInput" 
             type="text" 
-            placeholder="키워드를 입력해주세요. 쉼표로 구분합니다." 
-            class="w-full md:w-2/3 p-3 border rounded-lg mb-4"
+            placeholder="Please Enter Keywords, Separate with commas." 
+            class="font-mono w-full md:w-2/3 p-3 border rounded-lg mb-4"
           />
           <button 
             type="button" 
             onclick="fetchRecommendations()" 
-            class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700"
+            class="font-mono bg-gray-500 text-white px-6 py-3 mt-5 rounded-lg font-bold hover:bg-blue-700"
           >
             Get Recommendations
           </button>
@@ -52,7 +28,7 @@
       <!-- 추천 결과 -->
       <section id="recommendationsSection" class="hidden">
         <h2 class="text-2xl font-bold mb-4">Recommendations</h2>
-        <div id="recommendationsList" class="space-y-4">
+        <div id="recommendationsList" class="space-y-4 text-black">
           <!-- 주제 및 개요 카드들이 동적으로 추가될 부분 -->
         </div>
         <button 
@@ -95,7 +71,6 @@
         body: JSON.stringify({ keywords }),
       });
     
-      // 디버깅: 응답 확인
       const data = await response.json();
       console.log("Response Data:", data); // 디버깅: 응답 데이터 출력
     
@@ -105,6 +80,8 @@
         alert(data.message || 'An error occurred.');
       }
     }
+
+    let selectedRecommendation = null; // 현재 선택된 추천 항목의 index를 저장
 
     function displayRecommendations(recommendations) {
       if (!recommendations || !Array.isArray(recommendations)) {
@@ -129,7 +106,8 @@
           <h3 class="text-lg font-bold">${rec.title}</h3>
           <p class="text-gray-700">${rec.produce}</p>
           <button 
-            class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" 
+            id="selectButton${index}"
+            class="mt-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition" 
             onclick="selectRecommendation(${index})"
           >
             Select
@@ -141,13 +119,22 @@
       saveButton.classList.remove('hidden'); // 저장 버튼 표시
     }
 
-    let selectedRecommendation = null;
-
     function selectRecommendation(index) {
-      const recommendations = document.querySelectorAll('#recommendationsList > div');
-      recommendations.forEach((rec, i) => {
-        rec.classList.toggle('border-blue-500', i === index);
+      // 모든 버튼 초기화
+      const allButtons = document.querySelectorAll('#recommendationsList button');
+      allButtons.forEach((button, i) => {
+        button.classList.remove('bg-blue-500', 'hover:bg-blue-600'); // 파란색 상태 제거
+        button.classList.add('bg-gray-500', 'hover:bg-gray-600'); // 기본 회색 상태로 변경
+        button.textContent = "Select"; // 텍스트 초기화
       });
+
+      // 선택된 버튼 업데이트
+      const selectedButton = document.getElementById(`selectButton${index}`);
+      selectedButton.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+      selectedButton.classList.add('bg-blue-500', 'hover:bg-blue-600');
+      selectedButton.textContent = "Selected";
+
+      // 현재 선택 상태 업데이트
       selectedRecommendation = index;
     }
 
@@ -178,7 +165,5 @@
         alert(data.message || 'An error occurred.');
       }
     }
-  </script>
-
-</body>
-</html>
+</script>
+{% endblock %}

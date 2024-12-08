@@ -1,6 +1,8 @@
-{% extends "calendarApp/base.html" %}
+{% extends "suggest/index.html" %}
 
-{% block content %}
+{% block calendarApp %}
+<main class="main">
+    <div class="main_calendar ml-10 mr-10 mb-20">
     <!-- Add Event Modal -->
     <div id="calendar"></div>
     <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
@@ -82,9 +84,9 @@
             </div>
         </div>
     </div>
-{% endblock %}
+</div>
+</main>
 
-{% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>

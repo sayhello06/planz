@@ -1,49 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Details</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-800">
+{% extends "suggest/index.html" %}
 
-    <header class="bg-gray-800 text-white">
-        <div class="container mx-auto flex justify-between items-center py-4 px-6">
-          <!-- 로고 -->
-          <div class="text-2xl font-bold">
-            <a href="/" class="hover:text-gray-400">AI Suggest</a>
-          </div>
-          <!-- 네비게이션 메뉴 -->
-          <nav class="space-x-6 text-sm font-medium">
-            <a href="/" class="hover:text-gray-400">Home</a>
-            <a href="#about" class="hover:text-gray-400">About Us</a>
-            <a href="/recommend_topics" class="hover:text-gray-400">AI Suggest</a>
-            <a href="/list_projects" class="hover:text-gray-400">Projects</a>
-            <a href="#others" class="hover:text-gray-400">Others</a>
-            <a href="#" class="hover:text-gray-400">Login</a>
-          </nav>
-        </div>
-      </header>
-
-  <main class="container mx-auto py-8">
-    <div class="bg-white p-6 rounded-lg shadow">
+{% block detail %}
+  <main class="flex-1 bg-cover bg-center text-center text-white object-cover" style="background-image: url('https://i.ibb.co/d0Kn4qN/background.webp');">
+    <div class="container mx-auto my-auto bg-white p-6 rounded-lg shadow text-black">
       <h2 class="text-xl font-bold mb-4">{{ project.title }}</h2>
       <p class="mb-4 text-gray-700">{{ project.produce }}</p>
-      <h3 class="font-semibold">Keywords:</h3>
+      <h3 class="font-semibold text-black">Keywords:</h3>
       <ul class="list-disc pl-5">
         {% for keyword in project.keywords %}
           <li>{{ keyword }}</li>
         {% endfor %}
       </ul>
       <p class="text-gray-600 mt-4 text-sm">Created at: {{ project.created_at }}</p>
+      <a href="{% url 'list_projects' %}" class="mt-6 inline-block text-blue-500 hover:underline">Back to Projects</a>
     </div>
-    <a href="{% url 'list_projects' %}" class="mt-6 inline-block text-blue-500 hover:underline">Back to Projects</a>
   </main>
 
-  <footer class="bg-gray-800 text-white text-center py-4">
+  {% comment %} <footer class="bg-gray-800 text-white text-center py-4">
     <p>© 2024 AI Suggest. All rights reserved.</p>
-  </footer>
+  </footer> {% endcomment %}
 
-</body>
-</html>
+  {% endblock %}
