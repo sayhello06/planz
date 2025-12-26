@@ -9,7 +9,7 @@ from calendarApp.models import Event
 
 def calendar(request):
 
-    all_events = Event.objects.all()
+    all_events = Event.objects.all() #Event Model의 모든 요소 로드
     context = {
         "events": all_events,
     }
